@@ -8,7 +8,8 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SUCCESSOR_VERSION = "0.1.1b1"
+SUCCESSOR_VERSION = "0.1.1b2"
+ACCEPTED_MARKER_SHA256 = "8b3b10437f1d977d7a9dabe5ac254593c90a1c83331c091b2547ae640037c6df"
 CORE_PIN = "research-kb-core[pdf]==0.1.1"
 EXPECTED_KEYWORDS = {
     "research",
@@ -69,7 +70,7 @@ def test_successor_version_core_pin_and_local_artifact_exclusions() -> None:
     assert "Development Status :: 5 - Production/Stable" not in project_metadata["classifiers"]
     assert "urls" not in project_metadata
     assert "未发布" in readme
-    assert "0.1.1b1" in readme
+    assert "0.1.1b2" in readme
     assert _declared_init_version() == SUCCESSOR_VERSION
     assert frontend_package["private"] is True
     assert frontend_package["version"] == SUCCESSOR_VERSION
@@ -104,3 +105,39 @@ def test_public_governance_baseline_is_present_and_pinned() -> None:
         assert path.is_file(), f"missing public governance file: {relative_path}"
         assert path.stat().st_size > 0
     assert hashlib.sha256((REPO_ROOT / "LICENSE").read_bytes()).hexdigest() == LICENSE_SHA256
+
+
+def test_lock_marker_metadata_closure_consistency() -> None:
+    marker_path = REPO_ROOT / "core-compatibility.json"
+    assert hashlib.sha256(marker_path.read_bytes()).hexdigest() == ACCEPTED_MARKER_SHA256
+    marker = json.loads(marker_path.read_text(encoding="utf-8"))
+    profiles = marker["dependency_profiles"]
+    semantic_sets = {
+        tuple((item["name"], item["version"]) for item in profile["distributions"])
+        for profile in profiles
+    }
+    assert len(semantic_sets) == 1, "Core dependency runtime profiles drifted semantically"
+    marker_versions = {
+        item["name"]: item["version"] for item in profiles[0]["distributions"]
+    }
+
+    def canonical(name: str) -> str:
+        return name.lower().replace("_", "-").replace(".", "-")
+
+    lock_versions: dict[str, str] = {}
+    for line in (REPO_ROOT / "requirements.lock").read_text(encoding="utf-8").splitlines():
+        left, separator, version = line.partition("==")
+        if separator and version and not version.startswith(("http", "git")):
+            lock_versions[canonical(left.strip())] = version.strip()
+
+    project = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    metadata_versions: dict[str, str] = {}
+    for dependency in project["project"]["dependencies"]:
+        left, separator, version = dependency.partition("==")
+        if separator and version:
+            metadata_versions[canonical(left.strip())] = version.strip()
+
+    for name, version in marker_versions.items():
+        assert lock_versions.get(name) == version, f"requirements.lock drift for {name}"
+        assert metadata_versions.get(name) == version, f"package Requires-Dist drift for {name}"
+

@@ -17,7 +17,7 @@ Codex CLI / Claude Code CLI
 -> Paper Card、Review Memory、问答、研究组织和 Research Synthesis / 科研综合与启发等语义任务
 ```
 
-P0-P11 路线图和 R3 合成材料验收已关闭。当前 `0.1.1b1` 是未发布的本地
+P0-P11 路线图和 R3 合成材料验收已关闭。当前 `0.1.1b2` 是未发布的本地
 Windows beta 候选版，与 Core `0.1.1` 及 Application Service interface `1.23`
 绑定验证。Core 和 App 尚未完成公开发布；物理 sleep/resume 不在当前
 beta 支持承诺内。现有 legacy CLI workspace 仍是正式 source of truth，本候选版
@@ -218,7 +218,7 @@ P0-P11 历史计划、receipt 和 closure manifest 保留在私有审计仓库�
 - Obsidian 仅支持受管目录的单向生成视图。
 - Exchange 不执行 external record 到本地 canonical record 的语义合并。
 - 物理 sleep/resume 不在当前 beta 支持承诺内，需在 beta 后另行验证。
-- 当前 App `0.1.1b1` 与 Core `0.1.1` 及 Application Service interface `1.23`
+- 当前 App `0.1.1b2` 与 Core `0.1.1` 及 Application Service interface `1.23`
   绑定，仍是未发布的本地 Windows beta 候选版。
 - 尚未执行 legacy workspace migration、write freeze 或 cutover。
 
