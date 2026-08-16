@@ -1,0 +1,140 @@
+{
+  "contract_version": "public-p2-small-fixture@1",
+  "fixture_id": "p2-small",
+  "fixture_origin": "synthetic_from_scratch",
+  "generator_contract_version": "p2-catalog-generator@1.0",
+  "source_generator_manifest_sha256": "5e22b93e83fcd3d04060edec8974ba3852340df10e91a1e4b765e2aa90fa566d",
+  "source_canonical_tree_sha256": "97b6f5ec1ee9bb8a12c30c33e2c19da2d6b1834800b5d397f21666d3f97e59a5",
+  "digest_algorithm": "sha256_path_nul_content_v1",
+  "payload_root": "workspace",
+  "file_count": 25,
+  "total_bytes": 32032,
+  "whole_tree_digest": "e04f04340d2b19e0596d6e99bfacc4ea9cc85a3ed2bb469463c0bb7e9ccf29e2",
+  "files": [
+    {
+      "path": "domain-profile.yaml",
+      "size": 736,
+      "sha256": "e36c62198aa276f70404838e233bda896b7816fb49572a0c7f1ef7a74cfb51b4"
+    },
+    {
+      "path": "knowledge/evidence/by_paper/paper_08c0dd81-5b44-4d2f-9d32-662fb3e15ae5.evidence.jsonl",
+      "size": 923,
+      "sha256": "6de7f44d5dc93f6db0aacb20357a421a9387d5406f78def9ef553c5995c8f9dc"
+    },
+    {
+      "path": "knowledge/evidence/by_paper/paper_acd26f79-337f-42b8-a687-84edb727a949.evidence.jsonl",
+      "size": 923,
+      "sha256": "e740681f3f6b8b5a712fa6507f4d6b3e4baf632173e769d4191a4b5f36038175"
+    },
+    {
+      "path": "knowledge/evidence/by_paper/paper_f8daed20-fcf0-4ed8-9795-694bd631def9.evidence.jsonl",
+      "size": 923,
+      "sha256": "7873543e3cebf5e0ee86e2ce6f98e15760cb30a4a6e58a3a6b74cc4c1d6e0eef"
+    },
+    {
+      "path": "knowledge/guardian/reports.jsonl",
+      "size": 538,
+      "sha256": "52d7618257b36385ff2a327b24363aa259968eb406bc1a2aa4690a6f37f7656c"
+    },
+    {
+      "path": "knowledge/paper_cards/by_paper/paper_08c0dd81-5b44-4d2f-9d32-662fb3e15ae5.card.json",
+      "size": 1934,
+      "sha256": "7376a43dfc7a1d49cbe0e24e17fe7b4745cb75641c60dd6286fb0885300137c4"
+    },
+    {
+      "path": "knowledge/paper_cards/by_paper/paper_acd26f79-337f-42b8-a687-84edb727a949.card.json",
+      "size": 1934,
+      "sha256": "599a94a4773ce6ec9c6e91785b24b25f3d919dc00931729bb7f897bb03814f12"
+    },
+    {
+      "path": "knowledge/paper_cards/by_paper/paper_f8daed20-fcf0-4ed8-9795-694bd631def9.card.json",
+      "size": 1934,
+      "sha256": "5e21aad0048937c3164af08e0cc01818eaba485434d7435c211ee923c3d642ae"
+    },
+    {
+      "path": "knowledge/parse/by_paper/paper_08c0dd81-5b44-4d2f-9d32-662fb3e15ae5.pages.jsonl",
+      "size": 450,
+      "sha256": "48e317394d4d486b2d31ac5beabb229fac46b372c2be26032b075b2f5f69949f"
+    },
+    {
+      "path": "knowledge/parse/by_paper/paper_acd26f79-337f-42b8-a687-84edb727a949.pages.jsonl",
+      "size": 450,
+      "sha256": "4ac78e422bb21e9438d71f8104cd5a4c030d4d070cdb026f5b79bb4434127d7e"
+    },
+    {
+      "path": "knowledge/parse/by_paper/paper_c5743fa9-6803-4e6a-9928-46b07399d761.pages.jsonl",
+      "size": 461,
+      "sha256": "ad43b5d7baaa5debf6bf3d887ea58ea059062774f1641ed0926f226ef8c2d09f"
+    },
+    {
+      "path": "knowledge/parse/by_paper/paper_f8daed20-fcf0-4ed8-9795-694bd631def9.pages.jsonl",
+      "size": 450,
+      "sha256": "11d1d29aeb0dc37242ccde08f1f7f2939738c7c1ea3e8fe6ce3ab3fc4cd3f8c4"
+    },
+    {
+      "path": "knowledge/process/events.jsonl",
+      "size": 3500,
+      "sha256": "d4e4fba906d8f9a7ea941f870986b98a8ec8a0e944dd6e0fa334e1369ee996d6"
+    },
+    {
+      "path": "knowledge/questions/mappings.jsonl",
+      "size": 1931,
+      "sha256": "86a9b20a7908c041e2ffd29a775c65b89343127bfcf98fb6d17a2f808bb58e05"
+    },
+    {
+      "path": "knowledge/registry/papers.jsonl",
+      "size": 2599,
+      "sha256": "174aa4edb3f7b9fa89a5ca39fef1ae141eb5ac08d298cd1016716d6b29b709f9"
+    },
+    {
+      "path": "knowledge/review_memories/by_paper/paper_c5743fa9-6803-4e6a-9928-46b07399d761.review.json",
+      "size": 4481,
+      "sha256": "6bff2c07e69c0f2dbadc0aff4b3362d4fff54c8626a0a94c8f05b880cf789d76"
+    },
+    {
+      "path": "knowledge/step7/cross_views.jsonl",
+      "size": 1788,
+      "sha256": "a42740fc5fabbda516d7ffc98b41cceafe30106670ae928f09d4a70d5d225a0f"
+    },
+    {
+      "path": "knowledge/step7/insights.jsonl",
+      "size": 1776,
+      "sha256": "be0b7a9888827d50488c906c9a53f6591e67c8e610aaef03b004cb4f084b2f13"
+    },
+    {
+      "path": "knowledge/step7/review_angles.jsonl",
+      "size": 1729,
+      "sha256": "daed1d15103b1f360b07d3b3cf6ac0977bbf648557a0cddded90b9ee6c8333ab"
+    },
+    {
+      "path": "knowledge/step7/synthesis.jsonl",
+      "size": 1766,
+      "sha256": "166f9c326cf5c3b8eec57a0c02ca2522920f18099f10920870de71fada2f8b19"
+    },
+    {
+      "path": "sources/source-00000001.txt",
+      "size": 105,
+      "sha256": "99785ae9350ead9caa13b4e8f23980a5144febd67a4793b49da22a50182852da"
+    },
+    {
+      "path": "sources/source-00000002.txt",
+      "size": 105,
+      "sha256": "2407b5f6a0186296c6ab4db627ae20b896ef0582c79fe8411bad85a5693b5e7e"
+    },
+    {
+      "path": "sources/source-00000003.txt",
+      "size": 105,
+      "sha256": "c67807b9b64103dd86f67208abc55cac57caa1cbed7c680f3994e6118dfcb084"
+    },
+    {
+      "path": "sources/source-00000004.txt",
+      "size": 116,
+      "sha256": "45a31683d31cc897156844294c3acc0a3993c68765479d0ae6bca29bfa3291f3"
+    },
+    {
+      "path": "workspace.yaml",
+      "size": 375,
+      "sha256": "1d2a756eeb5bd01668f2b2cb42bd623b9fd2a46112d1a599e462ef20ab02303a"
+    }
+  ]
+}

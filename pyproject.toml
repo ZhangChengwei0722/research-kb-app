@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling==1.28.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "research-kb-app"
+version = "0.1.1b1"
+description = "Secure localhost product layer for Research KB Core"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.11,<3.13"
+keywords = ["research", "knowledge-base", "local-first", "localhost", "pdf", "scientific-workflow"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: Microsoft :: Windows",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = [
+  "fastapi==0.140.13",
+  "packaging==26.3",
+  "python-multipart==0.0.32",
+  "research-kb-core[pdf]==0.1.1",
+  "uvicorn==0.52.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "build==1.3.0",
+  "httpx==0.28.1",
+  "pytest==9.1.1",
+]
+
+[project.scripts]
+research-kb-app = "research_kb_app.entrypoint:main"
+
+[tool.hatch.build]
+exclude = [
+  ".git",
+  ".git/**",
+  ".pytest_cache/**",
+  ".venv/**",
+  "core-compatibility.new.json",
+  "docs/**",
+  "node_modules/**",
+  ".playwright-cli",
+  ".playwright-cli/**",
+  "playwright-report/**",
+  "test-results/**",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/research_kb_app"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"core-compatibility.json" = "research_kb_app/core-compatibility.json"
+"web/release" = "research_kb_app/web_dist"
+
+[tool.hatch.build.targets.sdist.force-include]
+"docs/architecture.md" = "docs/architecture.md"
+"docs/configuration.md" = "docs/configuration.md"
+"docs/r1-operator-guide.md" = "docs/r1-operator-guide.md"
+"docs/workflow.md" = "docs/workflow.md"
+"web/release" = "web/release"
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests/python"]

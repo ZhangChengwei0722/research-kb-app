@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible problem in the App.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include private source paths, paper text, credentials, tokens, or other sensitive data.
+        Security vulnerabilities must not be reported in a public issue.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the observed behavior and the expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest reproducible sequence using synthetic or public-safe data.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Include Windows, Python, Node.js, and App version details.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs
+      description: Paste only logs with local paths, source text, and secrets removed.
+      render: text
+    validations:
+      required: false

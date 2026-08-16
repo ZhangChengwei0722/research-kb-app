@@ -1,0 +1,31 @@
+name: Feature request
+description: Suggest a bounded improvement to the App.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keep proposals within the App product boundary. Do not include private research data or credentials.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem should this change address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the smallest useful behavior and its observable outcome.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and constraints
+      description: Note compatibility, security, privacy, storage, and Core boundary implications.
+    validations:
+      required: true
