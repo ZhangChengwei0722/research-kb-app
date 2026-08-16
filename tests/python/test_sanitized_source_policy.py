@@ -3,6 +3,7 @@ from __future__ import annotations
 import base64
 import json
 import subprocess
+import zlib
 from pathlib import Path
 
 import pytest
@@ -55,6 +56,25 @@ def _policy(root: Path, *, allow: list[str] | None = None) -> Path:
     path = root / "policy.json"
     path.write_text(json.dumps(payload), encoding="utf-8")
     return path
+
+
+def _png_bytes(*, extra_chunk: bytes | None = None) -> bytes:
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        return (
+            len(data).to_bytes(4, "big")
+            + kind
+            + data
+            + zlib.crc32(kind + data).to_bytes(4, "big")
+        )
+
+    signature = b"\x89PNG\r\n\x1a\n"
+    ihdr = chunk(b"IHDR", (1).to_bytes(4, "big") + (1).to_bytes(4, "big") + b"\x08\x02\x00\x00\x00")
+    idat = chunk(b"IDAT", zlib.compress(b"\x00\xff\x00\x00"))
+    tail = b""
+    if extra_chunk is not None:
+        tail = chunk(b"tEXt", b"Comment\x00" + extra_chunk)
+    iend = chunk(b"IEND", b"")
+    return signature + ihdr + idat + tail + iend
 
 
 def test_checked_in_policy_classifies_the_current_candidate() -> None:
@@ -157,3 +177,88 @@ def test_manifest_cannot_be_inside_materialized_tree(tmp_path: Path) -> None:
     with pytest.raises(PublicSourceError, match="outside the materialized tree"):
         materialize_with_manifest(source, policy, output, output / "manifest.json")
     assert not output.exists()
+
+
+def test_binary_payload_is_rejected_without_binary_allow(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    _git_init(source)
+    (source / "README.md").write_text("public\n", encoding="utf-8")
+    (source / "docs" / "assets").mkdir(parents=True)
+    (source / "docs" / "assets" / "ok.png").write_bytes(_png_bytes())
+    policy = _policy(
+        source,
+        allow=["README.md", "policy.json", "docs/assets/ok.png"],
+    )
+    _git_commit(source)
+
+    with pytest.raises(PublicSourceError, match="binary payload is not allowed"):
+        build_manifest(source, policy)
+
+
+def test_binary_allow_accepts_verified_png(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    _git_init(source)
+    (source / "README.md").write_text("public\n", encoding="utf-8")
+    (source / "docs" / "assets").mkdir(parents=True)
+    (source / "docs" / "assets" / "ok.png").write_bytes(_png_bytes())
+    policy = _policy(source, allow=["README.md", "policy.json", "docs/assets/ok.png"])
+    payload = json.loads(policy.read_text(encoding="utf-8"))
+    payload["binary_allow"] = ["docs/assets/*.png"]
+    policy.write_text(json.dumps(payload), encoding="utf-8")
+    _git_commit(source)
+
+    manifest = build_manifest(source, policy)
+    assert any(entry["path"] == "docs/assets/ok.png" for entry in manifest["files"])
+
+
+def test_binary_allow_rejects_non_png_payload(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    _git_init(source)
+    (source / "README.md").write_text("public\n", encoding="utf-8")
+    (source / "docs" / "assets").mkdir(parents=True)
+    (source / "docs" / "assets" / "fake.png").write_bytes(b"\x89PNG\r\n\x1a\nnot a png\x00garbage")
+    policy = _policy(source, allow=["README.md", "policy.json", "docs/assets/fake.png"])
+    payload = json.loads(policy.read_text(encoding="utf-8"))
+    payload["binary_allow"] = ["docs/assets/*.png"]
+    policy.write_text(json.dumps(payload), encoding="utf-8")
+    _git_commit(source)
+
+    with pytest.raises(PublicSourceError, match="binary payload is not allowed"):
+        build_manifest(source, policy)
+
+
+def test_binary_allow_pattern_must_target_png(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    _git_init(source)
+    (source / "README.md").write_text("public\n", encoding="utf-8")
+    policy = _policy(source, allow=["README.md", "policy.json"])
+    payload = json.loads(policy.read_text(encoding="utf-8"))
+    payload["binary_allow"] = ["docs/assets/*"]
+    policy.write_text(json.dumps(payload), encoding="utf-8")
+    _git_commit(source)
+
+    with pytest.raises(PublicSourceError, match="must target .png"):
+        build_manifest(source, policy)
+
+
+def test_allowed_png_is_still_secret_scanned(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    _git_init(source)
+    (source / "README.md").write_text("public\n", encoding="utf-8")
+    (source / "docs" / "assets").mkdir(parents=True)
+    (source / "docs" / "assets" / "leak.png").write_bytes(
+        _png_bytes(extra_chunk=b"ghp_" + b"A" * 40)
+    )
+    policy = _policy(source, allow=["README.md", "policy.json", "docs/assets/leak.png"])
+    payload = json.loads(policy.read_text(encoding="utf-8"))
+    payload["binary_allow"] = ["docs/assets/*.png"]
+    policy.write_text(json.dumps(payload), encoding="utf-8")
+    _git_commit(source)
+
+    with pytest.raises(PublicSourceError, match="secret-like value"):
+        build_manifest(source, policy)

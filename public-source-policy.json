@@ -58,6 +58,9 @@
     "web/src/**",
     "web/tests/**"
   ],
+  "binary_allow": [
+    "docs/assets/*.png"
+  ],
   "contract_version": "research-kb-app-public-source@1",
   "deny": [
     ".env",
