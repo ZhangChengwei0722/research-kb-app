@@ -1,19 +1,18 @@
 # Local Research Workspace Manager App Workflow
 
-> **发布状态：** App `0.1.1b1` 是未发布的本地 Windows beta 候选版。本文描述受控本地
-> workflow，不构成 public release、公开支持或已完成验收的声明；migration、cutover 和
-> publication 仍在范围之外。
+> **发布状态：** App `0.1.1b2` 已作为 Windows-only 公开 beta 发布。本文描述产品
+> workflow；migration、cutover 和 `Windows public beta accepted` 验收仍在范围之外。
 
-- status: `local_windows_beta_preparation`
+- status: `public_windows_beta`
 - application_service_interface: `1.23`
-- current_app_target: `0.1.1b1`
-- current_core_target: `0.1.1 release candidate @ protected main faf9e6fa9ad9167d86804df996e8cbc69592b539`
+- current_app_target: `0.1.1b2`
+- current_core_target: `0.1.1 published @ tag v0.1.1 -> faf9e6fa9ad9167d86804df996e8cbc69592b539`
 - current_core_wheel_sha256: `ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`
 - predecessor_b1_status: `accepted_exact_predecessor_dev_tuple`
 - sleep_resume_status: `accepted_beta_limitation`
-- r1_release_governance_status: `r1-0_r1-a_not_accepted_external_blockers_open`
-- windows_public_beta_status: `not_accepted`
-- app_public_beta_status: `not_published_not_accepted`
+- r1_release_governance_status: `core_and_app_publication_passed`
+- windows_public_beta_status: `evidence_recorded_acceptance_pending`
+- app_public_beta_status: `published_acceptance_pending`
 - agent_execution: `external_manual_handoff`
 - canonical_scientific_write_without_preview: false
 
@@ -102,13 +101,11 @@ and stale-maintenance work preserve receipts. SQLite/FTS can always be rebuilt.
 The P0-P11 roadmap and final generated-artifact cleanup are closed. W2 Source Adequacy and
 the 2026-08-14 B1/Bootstrap and fresh-Windows C15 predecessor acceptance are historical
 predecessor results for their exact dev tuple; physical sleep/resume remains an accepted
-beta limitation. The current controlled work is source-free local Windows beta preparation
-for App `0.1.1b1` against the exact Core `0.1.1` release candidate at protected main
-`faf9e6fa9ad9167d86804df996e8cbc69592b539`, accepted build-once wheel SHA
-`ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`, and interface `1.23`.
-R1-0/R1-A remain not accepted because PyPI ownership/publisher and primary/independent
-backup recovery owners are open. G0 and G1 are accepted; the next formal external Gate is
-Core R1-0 (`core_publication_target_preflight`). R1-A technical evidence is complete but
-not accepted. Core is not tagged, released or published, and the App and Windows public
-beta are not published or accepted. This preparation does not authorize migration,
-cutover, publication, topology changes or cleanup execution.
+beta limitation. Core `0.1.1` is published at tag `v0.1.1` targeting accepted commit
+`faf9e6fa9ad9167d86804df996e8cbc69592b539` (accepted build-once wheel SHA
+`ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`), and App `0.1.1b2`
+is published as a Windows-only public beta against interface `1.23`. Clean-install,
+lifecycle and headless GUI evidence is recorded; strict brand-new Windows account
+installation and headed GUI observation remain before the `Windows public beta accepted`
+claim. The public beta does not authorize migration, cutover, topology changes or cleanup
+execution.

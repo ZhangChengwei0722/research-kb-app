@@ -79,7 +79,10 @@ packages = ["src/research_kb_app"]
 [tool.hatch.build.targets.sdist.force-include]
 "docs/architecture.md" = "docs/architecture.md"
 "docs/configuration.md" = "docs/configuration.md"
+"docs/installation.md" = "docs/installation.md"
+"docs/known-limitations-and-privacy.md" = "docs/known-limitations-and-privacy.md"
 "docs/r1-operator-guide.md" = "docs/r1-operator-guide.md"
+"docs/support-matrix.md" = "docs/support-matrix.md"
 "docs/workflow.md" = "docs/workflow.md"
 "web/release" = "web/release"
 

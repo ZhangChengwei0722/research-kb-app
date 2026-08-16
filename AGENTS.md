@@ -32,7 +32,7 @@ src/research_kb_app/   Python backend, launcher and HTTP adapters
 web/                   React/TypeScript/Vite source
 tests/                 backend, security, integration and E2E tests
 scripts/               deterministic local bootstrap and validation tools
-docs/                  App architecture, workflow and closure records
+docs/                  architecture, workflow, installation, support matrix, privacy and limits
 ```
 
 Generated `.venv/`, `node_modules/`, `web/release/`, legacy `web/dist/`, logs, local config, App state, coverage, browser artifacts and temporary workspaces are ignored lifecycle outputs. Do not commit them. `web/release/` uses stable generated filenames so repeated builds do not accumulate content-addressed assets; do not clean legacy `web/dist/` without explicit deletion authority.
@@ -61,14 +61,13 @@ cumulative delivery history and compatibility constraints, not active implementa
 gates. The closed P11 public-roadmap baseline is interface `1.18`; W2 Source Adequacy
 closed on `1.19`. The 2026-08-14 B1 Bootstrap and Localhost Security predecessor was
 accepted for its exact predecessor dev tuple. Physical sleep/resume remains an accepted
-beta limitation. The current local Windows beta-preparation train targets local App
-candidate/target `0.1.1b1` and exact Core `0.1.1` release candidate at protected main
-`faf9e6fa9ad9167d86804df996e8cbc69592b539`, accepted build-once wheel SHA
-`ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`, and Application
-Service interface `1.23`. Core R1-0/R1-A remain not accepted because PyPI
-ownership/publisher and primary/independent backup recovery owners are open. Core is not
-tagged, released or published; the App and Windows public beta are not published or
-accepted.
+beta limitation. Core `0.1.1` is published at tag `v0.1.1` targeting accepted commit
+`faf9e6fa9ad9167d86804df996e8cbc69592b539` (accepted build-once wheel SHA
+`ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`), and App `0.1.1b2`
+is published on GitHub Releases and PyPI as a Windows-only public beta against Application
+Service interface `1.23`. App `0.1.1b1` is superseded. Strict brand-new Windows account
+installation and headed GUI observation remain before the `Windows public beta accepted`
+claim.
 
 P2, integrated P3-D and P4-A downstream compatibility acceptance are closed. P3-D0 adds
 the public Core deterministic-intake facade. P3-D1 adds backend-only watched-inbox/upload/
@@ -166,14 +165,16 @@ semantics. User-facing terminology remains `Research Synthesis / 科研综合与
 
 ## Public Governance Boundary
 
-- App `0.1.1b1` is an unpublished local Windows beta candidate. Governance documents describe
-  a controlled candidate, not a public release, public support service, or completed acceptance.
-- The target public repository identity and reporting identities are not closed. Do not add a
-  project URL, public issue endpoint, contact email, release link, publication step, or recovery
-  owner identity on assumption.
+- App `0.1.1b2` is a published Windows-only public beta on GitHub Releases and PyPI.
+  Governance documents describe a public beta with acceptance evidence still open; they do
+  not claim final acceptance or production support.
+- The public repository identity is
+  `https://github.com/ZhangChengwei0722/research-kb-app`. Do not add a project URL,
+  contact email, release link, publication step, or recovery-owner identity on assumption;
+  additions go through the same protected-main review.
 - Use `LICENSE`, `SECURITY.md`, `SUPPORT.md`, `CONTRIBUTING.md`, and `CHANGELOG.md` as the
-  candidate's public-safe governance baseline. Security reports remain private and ordinary
-  support/contribution requests use an already authorized controlled collaboration channel.
+  public governance baseline. Security reports remain private; ordinary support uses public
+  GitHub Issues under the synthetic/redaction boundary in `SUPPORT.md`.
 - This repository does not authorize remote publication, package publication, migration,
   cutover, private-workspace access, or deletion through documentation changes.
 
@@ -205,11 +206,12 @@ Use only the materialized synthetic `p2-small` fixture for integration/E2E. Do n
 
 ## Git And Delivery
 
-- This repository remains intentionally local-only through the P0-P11 closure and has no
-  configured remote. A later remote, publication or deployment still requires a separate
-  decision.
+- This is the public repository at `https://github.com/ZhangChengwei0722/research-kb-app`.
+  `main` is protected: required checks must pass before merge, and force push/delete are
+  forbidden.
 - Use small phase-scoped commits; do not rewrite history or force operations.
-- Never add a remote, publish, deploy or package a desktop installer without separate explicit authority.
+- Never publish a tag, GitHub Release, or PyPI package from an unreviewed branch. Publication
+  goes through the approved publisher workflow on protected main.
 - A bounded phase closes only after full validation, diff review, a closure manifest and `neat-freak` reconciliation.
 
 ## Destructive Operations
