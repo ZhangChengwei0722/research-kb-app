@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "research-kb-app"
-version = "0.1.1b1"
+version = "0.1.1b2"
 description = "Secure localhost product layer for Research KB Core"
 readme = "README.md"
 license = "Apache-2.0"
@@ -21,10 +21,26 @@ classifiers = [
   "Topic :: Scientific/Engineering",
 ]
 dependencies = [
+  "attrs==26.1.0",
+  "cffi==2.1.1",
+  "charset-normalizer==3.5.1",
+  "cryptography==50.0.0",
   "fastapi==0.140.13",
+  "filelock==3.32.3",
+  "jsonschema==4.26.0",
+  "jsonschema-specifications==2025.9.1",
   "packaging==26.3",
+  "pdfminer.six==20260107",
+  "pdfplumber==0.11.10",
+  "pillow==12.3.0",
+  "pycparser==3.0",
+  "pypdfium2==5.13.0",
   "python-multipart==0.0.32",
+  "pyyaml==6.0.3",
+  "referencing==0.37.0",
   "research-kb-core[pdf]==0.1.1",
+  "rpds-py==2026.6.3",
+  "typing-extensions==4.16.0",
   "uvicorn==0.52.0",
 ]
 

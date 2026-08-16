@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SUCCESSOR_VERSION = "0.1.1b1"
+SUCCESSOR_VERSION = "0.1.1b2"
 CORE_PIN = "research-kb-core[pdf]==0.1.1"
 EXPECTED_KEYWORDS = {
     "research",
@@ -69,7 +69,7 @@ def test_successor_version_core_pin_and_local_artifact_exclusions() -> None:
     assert "Development Status :: 5 - Production/Stable" not in project_metadata["classifiers"]
     assert "urls" not in project_metadata
     assert "未发布" in readme
-    assert "0.1.1b1" in readme
+    assert "0.1.1b2" in readme
     assert _declared_init_version() == SUCCESSOR_VERSION
     assert frontend_package["private"] is True
     assert frontend_package["version"] == SUCCESSOR_VERSION
