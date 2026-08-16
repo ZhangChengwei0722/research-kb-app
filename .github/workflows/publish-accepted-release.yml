@@ -205,13 +205,13 @@ jobs:
         run: |
           set -euo pipefail
           publication_root="$RUNNER_TEMP/publication"
-          cp "$RUNNER_TEMP/authority-manifest.json" "$publication_root/authority-manifest.json"
-          version="$(jq -r '.publication.accepted_version' "$publication_root/authority-manifest.json")"
+          version="$(jq -r '.publication.accepted_version' "$RUNNER_TEMP/authority-manifest.json")"
           wheel="$(find "$publication_root" -maxdepth 1 -type f -name '*.whl' -print -quit)"
           sdist="$(find "$publication_root" -maxdepth 1 -type f -name '*.tar.gz' -print -quit)"
           test -n "$wheel" && test -n "$sdist"
           python -c "import packaging" || python -m pip install --user packaging==26.3
           python scripts/verify_release_artifacts.py --dist-dir "$publication_root" --expected-version "$version"
+          cp "$RUNNER_TEMP/authority-manifest.json" "$publication_root/authority-manifest.json"
           printf '{}\n' > "$RUNNER_TEMP/downloaded-manifest.json"
           python tools/publication_governance.py publication-activation \
             --expected-authority "$publication_root/authority-manifest.json" \
