@@ -17,23 +17,84 @@ Codex CLI / Claude Code CLI
 -> Paper Card、Review Memory、问答、研究组织和 Research Synthesis / 科研综合与启发等语义任务
 ```
 
-P0-P11 路线图和 R3 合成材料验收已关闭。当前 `0.1.1b2` 是未发布的本地
-Windows beta 候选版，与 Core `0.1.1` 及 Application Service interface `1.23`
-绑定验证。Core 和 App 尚未完成公开发布；物理 sleep/resume 不在当前
-beta 支持承诺内。现有 legacy CLI workspace 仍是正式 source of truth，本候选版
-不执行 workspace migration 或 cutover。
+## 当前发布状态
 
-## 当前发布状态与治理
+- App `0.1.1b2` 是 **Windows-only 公开 beta**，已发布到
+  [GitHub Releases](https://github.com/ZhangChengwei0722/research-kb-app/releases/tag/v0.1.1b2)
+  和 [PyPI](https://pypi.org/project/research-kb-app/0.1.1b2/)。
+- App `0.1.1b1` 已被 `0.1.1b2` 取代，不应继续安装。
+- App 与 Core `0.1.1` 及 Application Service interface `1.23` 绑定验证；Core `0.1.1`
+  已发布到 GitHub Releases 和 PyPI，App 会按固定版本自动解析该依赖。
+- Windows beta 验证证据已齐备：干净安装、依赖一致性、生命周期回放、headless 与
+  headed（有界面）Microsoft Edge GUI 验证均已记录；strict fresh Windows profile 证据
+  通过 b1→b2 影响面重绑定继续有效（b1/b2 可执行载荷逐字节一致，仅版本与依赖元数据
+  变化）。
+- “公开 beta”表示可以下载、安装、运行和报告问题，不等于生产稳定版。发布卫生收口
+  （用户文档同步与 `0.1.1b1` 下架）完成前，不把 beta 支持承诺扩大为生产承诺。
 
-这是未发布的本地 Windows beta 候选版，不是 public release、公开下载包或已完成
-公开验收的产品。目标 public repository identity、公开 issue/support 入口和发布责任
-尚未关闭，因此 metadata 不声明 `project.urls`，文档也不提供会暗示现有公开仓库的 URL。
+P0-P11 路线图和 R3 合成材料验收已关闭。物理 sleep/resume 不在当前 beta 支持承诺内。
+现有 legacy CLI workspace 仍是正式 source of truth，本 beta 不执行 workspace migration
+或 cutover。
 
 - 许可证：[`Apache License 2.0`](LICENSE)
-- 安全报告：[`SECURITY.md`](SECURITY.md)，仅通过受控协作渠道私下提交
-- 普通支持：[`SUPPORT.md`](SUPPORT.md)，按候选版和 synthetic reproduction 边界处理
-- 贡献流程：[`CONTRIBUTING.md`](CONTRIBUTING.md)，不创建 public PR、remote 或发布动作
-- 候选版变更：[`CHANGELOG.md`](CHANGELOG.md)
+- 安装说明：[`docs/installation.md`](docs/installation.md)
+- 安全报告：[`SECURITY.md`](SECURITY.md)，安全问题请私下报告，不要公开披露
+- 支持矩阵：[`docs/support-matrix.md`](docs/support-matrix.md)
+- 普通支持：[`SUPPORT.md`](SUPPORT.md)，仅按 synthetic reproduction 和脱敏边界处理
+- 贡献流程：[`CONTRIBUTING.md`](CONTRIBUTING.md)，通过受保护 main 的 pull request 进行
+- 发布记录：[`CHANGELOG.md`](CHANGELOG.md)
+- 隐私与已知限制：[`docs/known-limitations-and-privacy.md`](docs/known-limitations-and-privacy.md)
+
+## 安装与启动
+
+要求 64 位 Windows 和 CPython 3.11 或 3.12。推荐在全新 virtualenv 中安装：
+
+```powershell
+python -m venv .venv-rkb
+.\.venv-rkb\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install research-kb-app==0.1.1b2
+pip check
+research-kb-app --help
+```
+
+`research-kb-app --help` 应以退出码 0 结束。
+
+偏好隔离式 CLI 工具的用户也可以使用 pipx：
+
+```powershell
+pipx install research-kb-app==0.1.1b2
+pipx runpip research-kb-app check
+research-kb-app --help
+```
+
+普通用户随后直接启动：
+
+```powershell
+research-kb-app
+```
+
+启动器会自动选择可用的 `127.0.0.1` 端口，输出 URL、一次性 startup token 和日志路径，
+并在服务就绪后打开默认浏览器。第一次启动时，输入 token 后可通过图形界面新建工作区，
+或采用一个现有且通过检查的 Shared Core workspace。文件夹选择只向浏览器返回临时 opaque
+lease，不返回本地绝对路径、ACL 或 Core authority object。完成首次设置后按界面提示重新打开
+App；后续启动会读取受管 profile。已安装版本不需要 Node.js、Vite development server、
+手工指定端口或手写 workspace config。
+
+完整安装、升级和故障排查步骤见 [`docs/installation.md`](docs/installation.md)；
+配置字段和路径约束见 [`docs/configuration.md`](docs/configuration.md)；完整操作说明见
+[`docs/r1-operator-guide.md`](docs/r1-operator-guide.md)。
+
+## 界面预览
+
+以下截图来自已安装 `0.1.1b2` 的 headed Microsoft Edge Playwright e2e 运行，全程使用
+synthetic `p2-small` fixture，不包含真实论文或私有数据：
+
+![headed setup 验证结束时截图](docs/assets/headed-setup-b2.png)
+
+![headed trusted-parse 验证结束时截图](docs/assets/headed-trusted-parse-b2.png)
+
+![headed bootstrap 验证结束时截图（移动视口）](docs/assets/headed-bootstrap-b2.png)
 
 ## 为什么需要这个软件
 
@@ -98,40 +159,6 @@ App 不在内部启动 Agent，也不保存模型账号或 API key。它生成�
 架构细节见 [docs/architecture.md](docs/architecture.md)，工作流细节见
 [docs/workflow.md](docs/workflow.md)。
 
-## 启动已安装版本
-
-当前候选验证环境和运行要求：
-
-- Windows 64-bit（当前候选验证平台）
-- Supported CPython 3.11 or 3.12（`>=3.11,<3.13`）
-- 已审查且与 `core-compatibility.json` 完全匹配的 App/Core wheel
-- App 管理的目录位于本机 NTFS，并通过当前用户、`SYSTEM` 和本机 Administrators 的
-  受保护 ACL 检查
-
-普通用户直接启动：
-
-```powershell
-research-kb-app
-```
-
-启动器会自动选择可用的 `127.0.0.1` 端口，输出 URL、一次性 startup token 和日志路径，
-并在服务就绪后打开默认浏览器。第一次启动时，输入 token 后可通过图形界面新建工作区，
-或采用一个现有且通过检查的 Shared Core workspace。文件夹选择只向浏览器返回临时 opaque
-lease，不返回本地绝对路径、ACL 或 Core authority object。完成首次设置后按界面提示重新打开
-App；后续启动会读取受管 profile。已安装版本不需要 Node.js、Vite development server、
-手工指定端口或手写 workspace config。
-
-多个本地 profile 可通过 `--profile <profile-id>` 隔离。已有自动化仍可使用高级兼容入口：
-
-```powershell
-research-kb-app --config <absolute-config-path>
-```
-
-完整 profile、配置字段和路径约束见 [docs/configuration.md](docs/configuration.md)。
-
-正常停止请使用产品内的电源按钮。完整操作说明见
-[docs/r1-operator-guide.md](docs/r1-operator-guide.md)。
-
 ## Codex / Claude Code 交接
 
 1. 在 App 中选择论文、任务类型和允许发送的内容范围。
@@ -191,7 +218,7 @@ src/research_kb_app/   FastAPI backend、launcher 和 HTTP adapters
 web/                   React/TypeScript/Vite 前端源码
 tests/                 Python、security、integration、frontend 和 E2E tests
 scripts/               bootstrap、配置物化与验证工具
-docs/                  架构、工作流、操作指南、阶段 receipts 和 closure manifests
+docs/                  架构、工作流、安装、支持矩阵、隐私与限制、操作指南
 core-compatibility.json 受审查的 Core commit、wheel digest 和 interface pin
 ```
 
@@ -199,8 +226,11 @@ core-compatibility.json 受审查的 Core commit、wheel digest 和 interface pi
 
 - [当前架构](docs/architecture.md)
 - [完整工作流](docs/workflow.md)
+- [安装说明](docs/installation.md)
+- [支持矩阵](docs/support-matrix.md)
 - [配置说明](docs/configuration.md)
 - [本地操作指南](docs/r1-operator-guide.md)
+- [隐私与已知限制](docs/known-limitations-and-privacy.md)
 - [安全政策](SECURITY.md)
 - [支持说明](SUPPORT.md)
 - [贡献指南](CONTRIBUTING.md)
@@ -212,15 +242,15 @@ P0-P11 历史计划、receipt 和 closure manifest 保留在私有审计仓库�
 ## 当前限制
 
 - 仅运行在 localhost，尚未封装桌面安装程序。
+- 仅正式支持 64 位 Windows 和 CPython 3.11/3.12。
 - macOS 尚未完成与 Windows 同等级别的正式 App pilot 和验收。
 - App 不直接启动 Codex 或 Claude Code，仅生成任务并接收结构化结果。
 - Discovery 首版只接入 Europe PMC。
 - Obsidian 仅支持受管目录的单向生成视图。
 - Exchange 不执行 external record 到本地 canonical record 的语义合并。
 - 物理 sleep/resume 不在当前 beta 支持承诺内，需在 beta 后另行验证。
-- 当前 App `0.1.1b2` 与 Core `0.1.1` 及 Application Service interface `1.23`
-  绑定，仍是未发布的本地 Windows beta 候选版。
+- strict fresh Windows profile 证据通过 b1→b2 影响面重绑定继续有效，不因 b2 的元数据
+  变更而重跑；headed Edge GUI 已逐 spec 记录。
 - 尚未执行 legacy workspace migration、write freeze 或 cutover。
 
-发布前还需完成 Core 与 App 的公开包身份、发布治理、隐私检查和 clean-install
-验证。当前候选版不授权 migration、cutover 或生产 workspace 切换。
+完整边界见 [`docs/known-limitations-and-privacy.md`](docs/known-limitations-and-privacy.md)。

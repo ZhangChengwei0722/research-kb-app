@@ -69,7 +69,8 @@ def test_successor_version_core_pin_and_local_artifact_exclusions() -> None:
     assert EXPECTED_CLASSIFIERS <= set(project_metadata["classifiers"])
     assert "Development Status :: 5 - Production/Stable" not in project_metadata["classifiers"]
     assert "urls" not in project_metadata
-    assert "未发布" in readme
+    assert "公开 beta" in readme
+    assert "未发布" not in readme
     assert "0.1.1b2" in readme
     assert _declared_init_version() == SUCCESSOR_VERSION
     assert frontend_package["private"] is True

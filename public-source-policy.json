@@ -13,8 +13,14 @@
     "SUPPORT.md",
     "core-compatibility.json",
     "docs/architecture.md",
+    "docs/assets/headed-bootstrap-b2.png",
+    "docs/assets/headed-setup-b2.png",
+    "docs/assets/headed-trusted-parse-b2.png",
     "docs/configuration.md",
+    "docs/installation.md",
+    "docs/known-limitations-and-privacy.md",
     "docs/r1-operator-guide.md",
+    "docs/support-matrix.md",
     "docs/workflow.md",
     "eslint.config.js",
     "package-lock.json",
@@ -51,6 +57,9 @@
     "web/index.html",
     "web/src/**",
     "web/tests/**"
+  ],
+  "binary_allow": [
+    "docs/assets/*.png"
   ],
   "contract_version": "research-kb-app-public-source@1",
   "deny": [
