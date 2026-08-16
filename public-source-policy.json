@@ -41,6 +41,7 @@
     "tools/generate_public_source_manifest.py",
     "tools/materialize_sanitized_tree.py",
     "tools/public_fixture_contract.py",
+    "tools/publication_governance.py",
     "tools/release_artifact_policy.py",
     "tools/public_source_contract.py",
     "tsconfig.app.json",
