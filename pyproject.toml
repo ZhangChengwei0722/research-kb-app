@@ -78,6 +78,9 @@ packages = ["src/research_kb_app"]
 
 [tool.hatch.build.targets.sdist.force-include]
 "docs/architecture.md" = "docs/architecture.md"
+"docs/assets/headed-bootstrap-b2.png" = "docs/assets/headed-bootstrap-b2.png"
+"docs/assets/headed-setup-b2.png" = "docs/assets/headed-setup-b2.png"
+"docs/assets/headed-trusted-parse-b2.png" = "docs/assets/headed-trusted-parse-b2.png"
 "docs/configuration.md" = "docs/configuration.md"
 "docs/installation.md" = "docs/installation.md"
 "docs/known-limitations-and-privacy.md" = "docs/known-limitations-and-privacy.md"

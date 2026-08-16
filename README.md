@@ -25,9 +25,12 @@ Codex CLI / Claude Code CLI
 - App `0.1.1b1` 已被 `0.1.1b2` 取代，不应继续安装。
 - App 与 Core `0.1.1` 及 Application Service interface `1.23` 绑定验证；Core `0.1.1`
   已发布到 GitHub Releases 和 PyPI，App 会按固定版本自动解析该依赖。
-- “公开 beta”表示可以下载、安装、运行和报告问题，但尚不等于最终验收：严格全新
-  Windows 账户下的干净安装验证和 headed（有界面）GUI 观察尚未完成。在完成这些证据前，
-  本仓库不宣称 `Windows public beta accepted`，也不把 beta 支持承诺扩大为生产承诺。
+- Windows beta 验证证据已齐备：干净安装、依赖一致性、生命周期回放、headless 与
+  headed（有界面）Microsoft Edge GUI 验证均已记录；strict fresh Windows profile 证据
+  通过 b1→b2 影响面重绑定继续有效（b1/b2 可执行载荷逐字节一致，仅版本与依赖元数据
+  变化）。
+- “公开 beta”表示可以下载、安装、运行和报告问题，不等于生产稳定版。发布卫生收口
+  （用户文档同步与 `0.1.1b1` 下架）完成前，不把 beta 支持承诺扩大为生产承诺。
 
 P0-P11 路线图和 R3 合成材料验收已关闭。物理 sleep/resume 不在当前 beta 支持承诺内。
 现有 legacy CLI workspace 仍是正式 source of truth，本 beta 不执行 workspace migration
@@ -55,7 +58,17 @@ pip check
 research-kb-app --help
 ```
 
-`research-kb-app --help` 应以退出码 0 结束。普通用户随后直接启动：
+`research-kb-app --help` 应以退出码 0 结束。
+
+偏好隔离式 CLI 工具的用户也可以使用 pipx：
+
+```powershell
+pipx install research-kb-app==0.1.1b2
+pipx runpip research-kb-app check
+research-kb-app --help
+```
+
+普通用户随后直接启动：
 
 ```powershell
 research-kb-app
@@ -71,6 +84,17 @@ App；后续启动会读取受管 profile。已安装版本不需要 Node.js、V
 完整安装、升级和故障排查步骤见 [`docs/installation.md`](docs/installation.md)；
 配置字段和路径约束见 [`docs/configuration.md`](docs/configuration.md)；完整操作说明见
 [`docs/r1-operator-guide.md`](docs/r1-operator-guide.md)。
+
+## 界面预览
+
+以下截图来自已安装 `0.1.1b2` 的 headed Microsoft Edge Playwright e2e 运行，全程使用
+synthetic `p2-small` fixture，不包含真实论文或私有数据：
+
+![headed setup 验证结束时截图](docs/assets/headed-setup-b2.png)
+
+![headed trusted-parse 验证结束时截图](docs/assets/headed-trusted-parse-b2.png)
+
+![headed bootstrap 验证结束时截图（移动视口）](docs/assets/headed-bootstrap-b2.png)
 
 ## 为什么需要这个软件
 
@@ -225,8 +249,8 @@ P0-P11 历史计划、receipt 和 closure manifest 保留在私有审计仓库�
 - Obsidian 仅支持受管目录的单向生成视图。
 - Exchange 不执行 external record 到本地 canonical record 的语义合并。
 - 物理 sleep/resume 不在当前 beta 支持承诺内，需在 beta 后另行验证。
-- 严格全新 Windows 账户下的干净安装验证和 headed GUI 观察尚未完成，因此在完成前不宣称
-  `Windows public beta accepted`。
+- strict fresh Windows profile 证据通过 b1→b2 影响面重绑定继续有效，不因 b2 的元数据
+  变更而重跑；headed Edge GUI 已逐 spec 记录。
 - 尚未执行 legacy workspace migration、write freeze 或 cutover。
 
 完整边界见 [`docs/known-limitations-and-privacy.md`](docs/known-limitations-and-privacy.md)。

@@ -65,9 +65,10 @@ beta limitation. Core `0.1.1` is published at tag `v0.1.1` targeting accepted co
 `faf9e6fa9ad9167d86804df996e8cbc69592b539` (accepted build-once wheel SHA
 `ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`), and App `0.1.1b2`
 is published on GitHub Releases and PyPI as a Windows-only public beta against Application
-Service interface `1.23`. App `0.1.1b1` is superseded. Strict brand-new Windows account
-installation and headed GUI observation remain before the `Windows public beta accepted`
-claim.
+Service interface `1.23`. App `0.1.1b1` is superseded. Clean-install, lifecycle, headless
+and headed Edge GUI evidence is recorded; strict fresh Windows profile evidence remains
+valid through the b1→b2 impact rebind. Release hygiene (b1 yank and user-document sync)
+remains before the pre-release marker is lifted.
 
 P2, integrated P3-D and P4-A downstream compatibility acceptance are closed. P3-D0 adds
 the public Core deterministic-intake facade. P3-D1 adds backend-only watched-inbox/upload/

@@ -30,6 +30,17 @@ pip install research-kb-app==0.1.1b2
 因为命令显式指定了 `0.1.1b2`，pip 会直接解析这个 pre-release 版本；不要在同一个
 环境里再混装其他 App 版本。
 
+偏好隔离式 CLI 工具的用户可以使用 pipx：
+
+```powershell
+pipx install research-kb-app==0.1.1b2
+pipx runpip research-kb-app check
+research-kb-app --help
+```
+
+pipx 会在独立环境中解析同一组固定依赖；`pipx runpip research-kb-app check` 相当于该
+环境内的 `pip check`。
+
 ## 安装后验证
 
 ```powershell

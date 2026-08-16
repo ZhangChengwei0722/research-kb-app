@@ -1,8 +1,9 @@
 # Local Research Workspace Manager App Architecture
 
 > **发布状态：** App `0.1.1b2` 已作为 Windows-only 公开 beta 发布到 GitHub Releases
-> 与 PyPI。`0.1.1b1` 已被取代。公开 beta 不等于最终验收：全新 Windows 账户安装与
-> headed GUI 观察完成前，不宣称 `Windows public beta accepted`。
+> 与 PyPI。`0.1.1b1` 已被取代。Windows beta 验证证据（安装、生命周期、headless 与
+> headed Edge GUI、strict fresh-profile 重绑定）已完成；b1 下架与文档卫生收口完成前
+> 保持 pre-release 标记，不宣称生产稳定版。
 
 - status: `public_windows_beta`
 - current_app_target: `0.1.1b2`
@@ -12,8 +13,8 @@
 - predecessor_b1_status: `accepted_exact_predecessor_dev_tuple`
 - sleep_resume_status: `accepted_beta_limitation`
 - r1_release_governance_status: `core_and_app_publication_passed`
-- windows_public_beta_status: `evidence_recorded_acceptance_pending`
-- app_public_beta_status: `published_acceptance_pending`
+- windows_public_beta_status: `validation_evidence_complete_release_hygiene_open`
+- app_public_beta_status: `published_validation_complete_release_hygiene_open`
 - current_layout_decision: `retain_current_layout`
 - private_workspace_cutover: false
 
@@ -84,9 +85,11 @@ predecessor dev tuple; physical sleep/resume remains an accepted beta limitation
 `faf9e6fa9ad9167d86804df996e8cbc69592b539`, and the accepted build-once wheel SHA is
 `ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`. App `0.1.1b2` is
 published on GitHub Releases and PyPI as a Windows-only public beta and supersedes
-`0.1.1b1`. Clean-install, lifecycle and headless GUI evidence is recorded; strict
-brand-new Windows account installation and headed GUI observation remain before the
-`Windows public beta accepted` claim. Private-workspace cutover, legacy migration,
+`0.1.1b1`. Clean-install, lifecycle, headless and headed Edge GUI evidence is recorded;
+the strict fresh Windows profile evidence remains valid through the b1→b2 impact rebind
+(b1/b2 executable payloads byte-identical; only version and dependency metadata differ).
+Release hygiene (b1 yank and user-document sync) remains before the pre-release marker is
+lifted. Private-workspace cutover, legacy migration,
 layout-v2, embedded Agent execution, second discovery provider, arbitrary vault browsing,
 reverse Obsidian sync, semantic Exchange merge and desktop packaging require separate
 designs outside the current public beta.

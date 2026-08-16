@@ -51,11 +51,11 @@ wheel/sdist 字节不会再被替换或重建。
 | GitHub Release + PyPI 发布且字节与候选一致 | 已记录 |
 | 全新 virtualenv 安装 + `pip check` + CLI smoke | 已记录 |
 | 两轮生命周期回放 + headless GUI e2e（逐 spec） | 已记录 |
-| 严格全新 Windows 账户下的干净安装 | 待完成 |
-| headed（有界面）GUI 观察 | 待完成 |
-| 完整 beta 验收结论 `Windows public beta accepted` | **尚未宣称** |
+| headed Microsoft Edge GUI e2e（逐 spec，含截图） | 已记录 |
+| strict fresh Windows profile（OS/路径/ACL/onboarding） | **继续有效**：b1 证据通过 b1→b2 影响面重绑定（b1/b2 可执行载荷逐字节一致，仅版本与依赖元数据变化） |
+| `Windows public beta accepted` 验证结论 | 验证阻断已清除；维护者仍把公开 beta 与生产稳定版区分，并在 b1 下架与文档卫生收口完成前保持 pre-release 标记 |
 
-维护者不会用已记录的自动化/headless 证据替代尚未完成的全新账户和 headed GUI 观察。
+维护者不会用 headless 证据替代 headed GUI 观察；本表中两者都是逐 spec 独立记录。
 
 ## 支持入口
 

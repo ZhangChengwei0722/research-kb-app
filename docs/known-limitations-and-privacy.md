@@ -57,7 +57,7 @@
 | Exchange 不自动语义合并 | 导入记录默认 immutable `external_unreviewed`，不会自动成为本地事实依据。 |
 | 无 hostile-PDF sandbox | PDF 与解析文本按不可信数据处理，但不提供独立沙箱、进程/网络隔离承诺。 |
 | 无内置 Agent/LLM | 语义任务由用户交给外部 CLI 执行，App 只交接、预览和审批。 |
-| 验收证据未闭环 | 全新 Windows 账户干净安装和 headed GUI 观察尚未完成，因此尚未宣称 `Windows public beta accepted`。 |
+| 发布卫生收口 | `0.1.1b1` 的 PyPI 下架由维护者按平台流程处理；完成前旧版本页面仍可能存在。 |
 
 ## b1 -> b2 修复说明
 

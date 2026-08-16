@@ -1,7 +1,7 @@
 # Local Research Workspace Manager App Workflow
 
 > **发布状态：** App `0.1.1b2` 已作为 Windows-only 公开 beta 发布。本文描述产品
-> workflow；migration、cutover 和 `Windows public beta accepted` 验收仍在范围之外。
+> workflow；migration、cutover 和生产稳定承诺仍在范围之外。
 
 - status: `public_windows_beta`
 - application_service_interface: `1.23`
@@ -11,8 +11,8 @@
 - predecessor_b1_status: `accepted_exact_predecessor_dev_tuple`
 - sleep_resume_status: `accepted_beta_limitation`
 - r1_release_governance_status: `core_and_app_publication_passed`
-- windows_public_beta_status: `evidence_recorded_acceptance_pending`
-- app_public_beta_status: `published_acceptance_pending`
+- windows_public_beta_status: `validation_evidence_complete_release_hygiene_open`
+- app_public_beta_status: `published_validation_complete_release_hygiene_open`
 - agent_execution: `external_manual_handoff`
 - canonical_scientific_write_without_preview: false
 
@@ -105,7 +105,7 @@ beta limitation. Core `0.1.1` is published at tag `v0.1.1` targeting accepted co
 `faf9e6fa9ad9167d86804df996e8cbc69592b539` (accepted build-once wheel SHA
 `ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`), and App `0.1.1b2`
 is published as a Windows-only public beta against interface `1.23`. Clean-install,
-lifecycle and headless GUI evidence is recorded; strict brand-new Windows account
-installation and headed GUI observation remain before the `Windows public beta accepted`
-claim. The public beta does not authorize migration, cutover, topology changes or cleanup
-execution.
+lifecycle, headless and headed Edge GUI evidence is recorded; strict fresh Windows
+profile evidence remains valid through the b1→b2 impact rebind. Release hygiene (b1 yank
+and user-document sync) remains before the pre-release marker is lifted. The public beta
+does not authorize migration, cutover, topology changes or cleanup execution.

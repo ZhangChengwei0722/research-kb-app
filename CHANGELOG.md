@@ -30,7 +30,10 @@
 - 两轮产品生命周期回放通过；
 - 四个 GUI e2e spec（setup wizard、discovery、trusted-parse、bootstrap）在已安装 b2
   上逐个通过；
-- 严格全新 Windows 账户干净安装与 headed GUI 观察仍待完成。
+- 同一组四个 spec 在 headed Microsoft Edge（headless=false，channel=msedge）下再次
+  逐个通过，并保留真实截图；
+- strict fresh Windows profile 证据通过 b1→b2 影响面重绑定继续有效：b1/b2 wheel
+  可执行载荷逐字节一致，仅 `METADATA`、`RECORD` 和 `__init__.py` 版本声明变化。
 
 ## [0.1.1b1] - 2026-08-16（已被 0.1.1b2 取代）
 
