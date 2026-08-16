@@ -107,3 +107,16 @@ profile 或 log 目录到 b2，也不要修改 b1 的已发布 package 文件。
 
 以上任一检查失败都应 fail closed。不要绕过 Core compatibility、ACL、profile-instance
 或 clipboard-policy 检查；不能确定时保留原状并提交脱敏最小复现。
+
+## 界面截图来源
+
+README 中的三张界面截图来自已安装 `0.1.1b2` 的 headed Microsoft Edge Playwright e2e
+运行（`headless=false`、`channel=msedge`、synthetic `p2-small` fixture、四个 spec
+逐个使用独立 App 生命周期）。截图由 Playwright 在每个测试结束时自动生成，未做内容
+合成或人工修饰；SHA-256 分别为：
+
+```text
+docs/assets/headed-setup-b2.png         8F79EBC344322BCD85B5F0A52C48EEE041EC56ABB14AE4FFA788E701D754CC8D
+docs/assets/headed-trusted-parse-b2.png 96B2791351204B83AD425C3D197B1C31BC505577D5F1AEA2AE70154B6AB2584E
+docs/assets/headed-bootstrap-b2.png     53376456DF246521FCFC6F56180C1D0FBECBD6D623D33812E242158999E82517
+```
