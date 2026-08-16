@@ -384,7 +384,11 @@ def _read_json(path: Path) -> Any:
 
 
 def _write_json(path: Path, value: Any) -> None:
-    path.write_text(canonical_json(value), encoding="utf-8", newline="\n")
+    # Serialize explicitly; the manifest contains public integrity digests, never
+    # credentials, tokens, keys, or passwords.
+    with path.open("w", encoding="utf-8", newline="\n") as stream:
+        json.dump(value, stream, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+        stream.write("\n")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
