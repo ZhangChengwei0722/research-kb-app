@@ -374,8 +374,11 @@ jobs:
         run: |
           set -euo pipefail
           publication_root="$RUNNER_TEMP/publication"
+          pypi_dist="$RUNNER_TEMP/pypi-dist"
+          mkdir -p "$pypi_dist"
           wheel="$(find "$publication_root" -maxdepth 1 -type f -name '*.whl' -print -quit)"
           sdist="$(find "$publication_root" -maxdepth 1 -type f -name '*.tar.gz' -print -quit)"
+          cp "$wheel" "$sdist" "$pypi_dist/"
           python tools/publication_governance.py verify-publication \
             --manifest "$publication_root/activation.json" \
             --expected "$publication_root/authority-manifest.json" \
@@ -426,7 +429,7 @@ jobs:
         if: steps.pypi.outputs.upload_needed == 'true'
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
         with:
-          packages-dir: ${{ runner.temp }}/publication
+          packages-dir: ${{ runner.temp }}/pypi-dist
           verbose: false
 
   reconcile-publication:
