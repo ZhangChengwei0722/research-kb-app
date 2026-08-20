@@ -41,7 +41,7 @@ dependencies = [
   "research-kb-core[pdf]==0.1.1",
   "rpds-py==2026.6.3",
   "typing-extensions==4.16.0",
-  "uvicorn==0.52.0",
+  "uvicorn==0.52.3",
 ]
 
 [project.optional-dependencies]
