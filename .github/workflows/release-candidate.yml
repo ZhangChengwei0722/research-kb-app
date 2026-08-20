@@ -115,6 +115,10 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
+      - name: Audit locked Python dependencies with pip-audit
+        run: |
+          python -m pip install pip-audit==2.10.1
+          python -m pip_audit --no-deps --disable-pip --progress-spinner off -r requirements.lock
       - name: Download release candidate frontend closure
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
