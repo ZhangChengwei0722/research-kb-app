@@ -1,13 +1,15 @@
 # 贡献指南
 
-> **发布状态：** App `0.1.1b1` 是未发布的本地 Windows beta 候选版。当前没有公开
-> pull request、issue 或下载入口；所有贡献都必须经过受控协作和维护者明确的范围确认。
+> **发布状态：** App `0.1.1b2` 是 Windows-only 公开 beta。本仓库接受通过 pull request
+> 的贡献，但 `main` 受保护：所有必需检查通过后才能合并；任何贡献者都不得自行发布
+> tag、Release 或 PyPI 包。
 
-## 当前贡献入口
+## 贡献入口
 
-请先在已经存在的受控协作渠道中确认任务范围，再提交 focused patch 或任务交接材料。
-不要添加 Git remote、push 到公共仓库、创建公开镜像、发布候选包或引入新的公开 URL。
-如果没有获得受控入口，不要把仓库内容复制到公开位置。
+1. 对公开仓库 fork 或创建分支，在 pull request 中提交 focused patch；
+2. 保持变更小、可审查、可回退，不修改 CI、fixture/public-source、锁文件、权限或
+   release 治理边界（维护者授权的单独变更除外）；
+3. 不 push tag、不创建 GitHub Release、不发布 PyPI 包、不创建公开镜像。
 
 ## 修改前
 
@@ -19,7 +21,6 @@
 
 ## 修改与验证
 
-- 保持变更小、可审查、可回退，不修改 CI、fixture/public-source、锁文件、权限或远程配置；
 - 使用项目现有的 Python、React、TypeScript、Vite 和 PowerShell 约定，不添加生产依赖；
 - 按任务要求运行 focused checks，并记录每个命令的精确退出码；
 - 不把命令成功、patch 生成或测试通过描述为发布、Gate 或 milestone acceptance；
@@ -27,7 +28,7 @@
 
 ## 交接内容
 
-通过受控协作渠道提交：
+在 pull request 描述中说明：
 
 - 变更文件清单和每个文件的目的；
 - 关键设计取舍、已知限制和未解决问题；
@@ -39,4 +40,4 @@
 本项目采用 [`Apache License 2.0`](LICENSE)。提交内容必须适合在该许可证下审查，且
 不得包含真实 PDF、解析文本、Evidence quote、研究笔记、workspace export、凭据、token、
 绝对路径或机构专属信息。安全问题不要公开提交，按 [`SECURITY.md`](SECURITY.md) 处理；
-普通使用问题按 [`SUPPORT.md`](SUPPORT.md) 的未发布候选边界处理。
+普通使用问题按 [`SUPPORT.md`](SUPPORT.md) 的 beta 支持边界处理。
