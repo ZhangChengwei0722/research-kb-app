@@ -82,6 +82,23 @@ def _matches(path: str, patterns: Sequence[str]) -> bool:
     return any(fnmatch.fnmatchcase(path, pattern) for pattern in patterns)
 
 
+def _validated_binary_patterns(policy: dict[str, object]) -> list[str]:
+    patterns = policy.get("binary_allow", [])
+    if not isinstance(patterns, list) or not all(isinstance(item, str) and item for item in patterns):
+        raise PublicSourceError("policy field 'binary_allow' must be a string list when present")
+    validated: list[str] = []
+    for pattern in patterns:
+        if "\\" in pattern or pattern.startswith("/") or pattern != pattern.strip():
+            raise PublicSourceError(f"unsafe binary_allow pattern: {pattern!r}")
+        parts = [part for part in pattern.split("/") if part not in {"", "."}]
+        if any(part == ".." for part in parts):
+            raise PublicSourceError(f"unsafe binary_allow pattern: {pattern!r}")
+        if not pattern.lower().endswith(".png"):
+            raise PublicSourceError(f"binary_allow pattern must target .png: {pattern!r}")
+        validated.append(pattern)
+    return validated
+
+
 def load_policy(path: Path) -> dict[str, object]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -93,6 +110,7 @@ def load_policy(path: Path) -> dict[str, object]:
         values = payload.get(key)
         if not isinstance(values, list) or not all(isinstance(item, str) and item for item in values):
             raise PublicSourceError(f"policy field {key!r} must be a non-empty string list")
+    _validated_binary_patterns(payload)
     max_file_bytes = payload.get("max_file_bytes")
     if not isinstance(max_file_bytes, int) or isinstance(max_file_bytes, bool) or max_file_bytes <= 0:
         raise PublicSourceError("policy max_file_bytes must be a positive integer")
@@ -131,15 +149,38 @@ def _decoded_literals(policy: dict[str, object]) -> list[bytes]:
     return sorted(set(decoded))
 
 
+_PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def _verified_png(payload: bytes) -> bool:
+    if not payload.startswith(_PNG_SIGNATURE) or len(payload) < 57:
+        return False
+    if payload[12:16] != b"IHDR" or payload[-8:-4] != b"IEND" or payload[-4:] != b"\xaeB`\x82":
+        return False
+    width = int.from_bytes(payload[16:20], "big")
+    height = int.from_bytes(payload[20:24], "big")
+    return 1 <= width <= 8192 and 1 <= height <= 8192
+
+
 def _scan_payload(relative_path: str, payload: bytes, policy: dict[str, object]) -> None:
-    if b"\0" in payload:
-        raise PublicSourceError(f"binary payload is not allowed: {relative_path}")
+    import re
+
     for literal in _decoded_literals(policy):
         if literal.lower() in payload.lower():
             raise PublicSourceError(f"forbidden private literal in {relative_path}")
-    text = payload.decode("utf-8", errors="strict")
-    import re
-
+    binary_allowed = _matches(relative_path, policy.get("binary_allow", []))
+    if b"\0" in payload:
+        if not (binary_allowed and _verified_png(payload)):
+            raise PublicSourceError(f"binary payload is not allowed: {relative_path}")
+        for pattern in policy["secret_patterns"]:
+            compiled = re.compile(pattern.encode("ascii"), flags=re.IGNORECASE)
+            if compiled.search(payload):
+                raise PublicSourceError(f"secret-like value in {relative_path}")
+        return
+    try:
+        text = payload.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as error:
+        raise PublicSourceError(f"source file is not valid UTF-8: {relative_path}") from error
     for pattern in policy["secret_patterns"]:
         if re.search(pattern, text):
             raise PublicSourceError(f"secret-like value in {relative_path}")

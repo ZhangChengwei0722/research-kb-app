@@ -1,8 +1,10 @@
 # App Configuration
 
-> **发布状态：** 本文适用于未发布的 App `0.1.1b1` 本地 Windows beta 候选版。配置说明
-> 不提供 public repository URL、公开支持入口或发布承诺；候选版不授权 migration、
-> cutover 或真实生产 workspace 切换。
+> **发布状态：** 本文适用于已发布的 App `0.1.1b2` Windows-only 公开 beta
+> （[GitHub Releases](https://github.com/ZhangChengwei0722/research-kb-app/releases/tag/v0.1.1b2) /
+> [PyPI](https://pypi.org/project/research-kb-app/0.1.1b2/)）。安装步骤见
+> [`docs/installation.md`](installation.md)；beta 不授权 migration、cutover 或真实生产
+> workspace 切换。
 
 ## Managed Product Profile
 

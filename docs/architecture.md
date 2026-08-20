@@ -1,18 +1,20 @@
 # Local Research Workspace Manager App Architecture
 
-> **发布状态：** App `0.1.1b1` 是未发布的本地 Windows beta 候选版。本文不构成 public
-> release、公开支持或已完成验收的声明；目标 public repository identity 尚未关闭。
+> **发布状态：** App `0.1.1b2` 已作为 Windows-only 公开 beta 发布到 GitHub Releases
+> 与 PyPI。`0.1.1b1` 已被取代。Windows beta 验证证据（安装、生命周期、headless 与
+> headed Edge GUI、strict fresh-profile 重绑定）已完成；b1 下架与文档卫生收口完成前
+> 保持 pre-release 标记，不宣称生产稳定版。
 
-- status: `local_windows_beta_preparation`
-- current_app_target: `0.1.1b1`
-- current_core_target: `0.1.1 release candidate @ protected main faf9e6fa9ad9167d86804df996e8cbc69592b539`
+- status: `public_windows_beta`
+- current_app_target: `0.1.1b2`
+- current_core_target: `0.1.1 published @ tag v0.1.1 -> faf9e6fa9ad9167d86804df996e8cbc69592b539`
 - current_core_wheel_sha256: `ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`
 - application_service_interface: `1.23`
 - predecessor_b1_status: `accepted_exact_predecessor_dev_tuple`
 - sleep_resume_status: `accepted_beta_limitation`
-- r1_release_governance_status: `r1-0_r1-a_not_accepted_external_blockers_open`
-- windows_public_beta_status: `not_accepted`
-- app_public_beta_status: `not_published_not_accepted`
+- r1_release_governance_status: `core_and_app_publication_passed`
+- windows_public_beta_status: `validation_evidence_complete_release_hygiene_open`
+- app_public_beta_status: `published_validation_complete_release_hygiene_open`
 - current_layout_decision: `retain_current_layout`
 - private_workspace_cutover: false
 
@@ -78,14 +80,16 @@ and C18 trusted supervised Parse. The App adds no-config managed profiles, nativ
 selection, Windows ACL/mutex enforcement, setup/recovery UI and server-owned egress custody.
 
 The 2026-08-14 B1/Bootstrap and fresh-Windows C15 predecessor was accepted for the exact
-predecessor dev tuple; physical sleep/resume remains an accepted beta limitation. Current
-local preparation targets App `0.1.1b1` and exact Core `0.1.1` release candidate at
-protected main `faf9e6fa9ad9167d86804df996e8cbc69592b539` with accepted build-once wheel SHA
-`ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`. Core R1-0/R1-A
-remain not accepted because PyPI ownership/publisher and primary/independent backup
-recovery owners are open. Core is not tagged, released or published; the App and Windows
-public beta are not published or accepted. Private-workspace cutover, legacy migration,
+predecessor dev tuple; physical sleep/resume remains an accepted beta limitation. Core
+`0.1.1` is published: tag `v0.1.1` targets accepted commit
+`faf9e6fa9ad9167d86804df996e8cbc69592b539`, and the accepted build-once wheel SHA is
+`ddc95cb332217cf4ca7ebd0e4833b79e4c363af8e7a57d3b449629bc025a65e5`. App `0.1.1b2` is
+published on GitHub Releases and PyPI as a Windows-only public beta and supersedes
+`0.1.1b1`. Clean-install, lifecycle, headless and headed Edge GUI evidence is recorded;
+the strict fresh Windows profile evidence remains valid through the b1→b2 impact rebind
+(b1/b2 executable payloads byte-identical; only version and dependency metadata differ).
+Release hygiene (b1 yank and user-document sync) remains before the pre-release marker is
+lifted. Private-workspace cutover, legacy migration,
 layout-v2, embedded Agent execution, second discovery provider, arbitrary vault browsing,
 reverse Obsidian sync, semantic Exchange merge and desktop packaging require separate
-designs. See `docs/p11-layout-v2-decision.md` and
-`docs/p11-operational-acceptance-closure-manifest.md`.
+designs outside the current public beta.

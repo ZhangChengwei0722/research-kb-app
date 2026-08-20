@@ -1,13 +1,13 @@
 # R1 Local Operator Guide
 
-> **发布状态：** 本指南适用于未发布的 App `0.1.1b1` 本地 Windows beta 候选版。它只
-> 描述受控本地操作，不构成 public release、公开下载、公开支持或验收承诺。
+> **发布状态：** 本指南适用于已发布的 App `0.1.1b2` Windows-only 公开 beta。它只描述
+> 本地操作；beta 支持边界见 [`docs/support-matrix.md`](support-matrix.md)。
 
 ## Start
 
-Install the reviewed `research-kb-app` wheel with its pinned `research-kb-core[pdf]`
-dependency into a 64-bit CPython 3.11 or 3.12 environment. Ordinary users start the
-product without a configuration argument:
+Install `research-kb-app==0.1.1b2` from PyPI into a 64-bit CPython 3.11 or 3.12
+environment; its pinned `research-kb-core[pdf]==0.1.1` dependency is resolved
+automatically. Ordinary users start the product without a configuration argument:
 
 ```powershell
 research-kb-app
