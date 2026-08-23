@@ -15,7 +15,7 @@
     "test:e2e": "playwright test web/tests/e2e/setup.spec.ts && playwright test web/tests/e2e/trusted-parse.spec.ts && playwright test web/tests/e2e/bootstrap.spec.ts && playwright test web/tests/e2e/discovery.spec.ts"
   },
   "dependencies": {
-    "lucide-react": "1.27.0",
+    "lucide-react": "1.33.0",
     "pdfjs-dist": "6.2.108",
     "react": "19.2.8",
     "react-dom": "19.2.8"
