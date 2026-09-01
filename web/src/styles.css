@@ -1327,3 +1327,55 @@ label { display: block; margin-bottom: 7px; color: #505b58; font-size: 12px; fon
   .discovery-result-row { grid-template-columns: 20px minmax(0, 1fr); }
   .discovery-result-row > span:not(.discovery-result-main) { grid-column: 2; }
 }
+
+/* --- confirmation affordance for destructive actions --- */
+.confirm-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid var(--danger-border, #d9534f);
+  border-radius: 8px;
+  background: var(--surface-raised, #fff);
+}
+
+.confirm-inline-text {
+  font-size: 0.8125rem;
+  max-width: 32ch;
+  line-height: 1.35;
+}
+
+.confirm-inline button {
+  white-space: nowrap;
+}
+
+/* --- first-run restart guidance --- */
+.restart-steps {
+  margin: 12px 0 8px;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 6px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.restart-steps code,
+.restart-steps kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--surface-sunken, #f2f2f5);
+}
+
+.restart-steps kbd {
+  border: 1px solid var(--border-subtle, #d5d5dd);
+}
+
+.restart-note {
+  font-size: 0.8125rem;
+  opacity: 0.75;
+  max-width: 46ch;
+  line-height: 1.5;
+}

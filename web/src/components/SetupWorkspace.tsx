@@ -12,7 +12,6 @@ import {
   Trash2,
 } from "lucide-react";
 import {
-  ApiError,
   commitWorkspaceAdoption,
   commitWorkspaceSetup,
   getSetupRecovery,
@@ -28,6 +27,7 @@ import {
   type WorkspaceSetupPreview,
   type WorkspaceSetupResult,
 } from "../api";
+import { errorMessage } from "../errors";
 
 type SetupWorkspaceProps = {
   initialStatus: SetupStatus;
@@ -197,7 +197,20 @@ export function SetupWorkspace({ initialStatus, onComplete }: SetupWorkspaceProp
         <section className="setup-complete" aria-live="polite">
           <RotateCcw size={28} aria-hidden="true" />
           <p className="section-kicker">WORKSPACE READY</p>
-          <h2>重新打开应用</h2>
+          <h2>工作区已创建，请重新启动 App</h2>
+          <ol className="restart-steps">
+            <li>关闭当前浏览器标签页。</li>
+            <li>
+              回到启动 App 的终端窗口，按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 结束当前进程。
+            </li>
+            <li>
+              重新运行 <code>research-kb-app</code>。
+            </li>
+            <li>终端会打印新的地址和新的一次性 token，用它完成验证即可进入工作区。</li>
+          </ol>
+          <p className="restart-note">
+            原来的 token 已经失效，这是正常的安全设计：每次启动都会生成一个新的一次性 token。
+          </p>
         </section>
       </SetupFrame>
     );
@@ -372,9 +385,4 @@ function recoveryStateLabel(state: string): string {
     complete: "等待完成配置",
     corrupt: "需要检查",
   }[state] ?? "需要处理";
-}
-
-function errorMessage(caught: unknown): string {
-  if (caught instanceof ApiError) return caught.message;
-  return "操作未完成";
 }

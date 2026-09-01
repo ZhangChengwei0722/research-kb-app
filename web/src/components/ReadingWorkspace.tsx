@@ -18,6 +18,8 @@ import {
   type ReviewUnit,
 } from "../api";
 import { EvidencePdfViewer } from "./EvidencePdfViewer";
+import { errorMessage as sharedErrorMessage } from "../errors";
+import { statusLabel } from "../statusLabels";
 
 type ReadingWorkspaceProps = {
   paperIds: string[];
@@ -184,11 +186,11 @@ function PaperColumn({
           {bibliography.doi ? ` · ${bibliography.doi}` : ""}
         </p>
         <div className="reading-status-strip" aria-label="阅读状态">
-          <ReadingBadge label={`source:${reading.source.source_availability}`} value={reading.source.source_availability} />
-          <ReadingBadge label={`trace:${reading.source.source_currentness}`} value={reading.source.source_currentness} />
-          <ReadingBadge label={`parse:${reading.parse.binding_state}`} value={reading.parse.binding_state} />
+          <ReadingBadge label={`来源：${statusLabel(reading.source.source_availability)}`} value={reading.source.source_availability} />
+          <ReadingBadge label={`回源：${statusLabel(reading.source.source_currentness)}`} value={reading.source.source_currentness} />
+          <ReadingBadge label={`解析：${statusLabel(reading.parse.binding_state)}`} value={reading.parse.binding_state} />
           <ReadingBadge
-            label={`revision:${reading.primary?.revision_status ?? reading.review?.revision_status ?? "none"}`}
+            label={`修订：${statusLabel(reading.primary?.revision_status ?? reading.review?.revision_status ?? "none")}`}
             value={reading.primary?.revision_status ?? reading.review?.revision_status ?? "none"}
           />
         </div>
@@ -260,7 +262,7 @@ function PrimaryUnit({
   return (
     <div className="reading-unit">
       <div className="unit-status-line">
-        <ReadingBadge label={unit.grounding_status} value={unit.grounding_status} />
+        <ReadingBadge label={statusLabel(unit.grounding_status)} value={unit.grounding_status} />
         <ReadingBadge label={factualEligible ? "单元状态可采信" : "单元状态受限"} value={factualEligible ? "current" : "warning"} />
         <span>{humanize(unit.statement_type)}</span>
       </div>
@@ -268,10 +270,10 @@ function PrimaryUnit({
       {unit.source_page && <SourceLocator page={unit.source_page} />}
       {unit.evidence_ids.length > 0 && (
         <div className="evidence-actions">
-          {unit.evidence_ids.map((evidenceId) => (
+          {unit.evidence_ids.map((evidenceId, index) => (
             <button className="evidence-link" type="button" key={evidenceId} onClick={() => onOpenEvidence(evidenceId)} aria-label={`查看 Evidence ${evidenceId}`}>
               <Quote size={15} aria-hidden="true" />
-              Evidence
+              {unit.evidence_ids.length > 1 ? `Evidence ${index + 1}` : "Evidence"}
             </button>
           ))}
         </div>
@@ -344,7 +346,7 @@ function QuestionContext({ reading }: { reading: ReadingPaper }) {
         <div key={question.question_id}>
           <div className="question-line">
             <strong>{question.question_text}</strong>
-            <ReadingBadge label={question.freshness} value={question.freshness} />
+            <ReadingBadge label={statusLabel(question.freshness)} value={question.freshness} />
           </div>
           <p>{question.scope}</p>
         </div>
@@ -381,9 +383,9 @@ function EvidenceDrawer({
         <div className="evidence-drawer-body">
           <div className="reading-status-strip">
             <ReadingBadge label={trace.factual_support_eligible ? "可用于事实支持" : "不可用于事实支持"} value={trace.factual_support_eligible ? "current" : "warning"} />
-            <ReadingBadge label={`source:${trace.source.source_currentness}`} value={trace.source.source_currentness} />
-            <ReadingBadge label={`parse:${trace.parse.binding_state}`} value={trace.parse.binding_state} />
-            <ReadingBadge label={`revision:${trace.primary_revision.revision_status}`} value={trace.primary_revision.revision_status} />
+            <ReadingBadge label={`回源：${statusLabel(trace.source.source_currentness)}`} value={trace.source.source_currentness} />
+            <ReadingBadge label={`解析：${statusLabel(trace.parse.binding_state)}`} value={trace.parse.binding_state} />
+            <ReadingBadge label={`修订：${statusLabel(trace.primary_revision.revision_status)}`} value={trace.primary_revision.revision_status} />
           </div>
           <section>
             <h4>原文摘录</h4>
@@ -456,6 +458,6 @@ function statusTone(value: string): string {
 }
 
 function errorMessage(caught: unknown): string {
-  if (caught instanceof ApiError) return `${caught.code}: ${caught.message}`;
+  if (caught instanceof ApiError) return sharedErrorMessage(caught);
   return "阅读上下文未能载入";
 }

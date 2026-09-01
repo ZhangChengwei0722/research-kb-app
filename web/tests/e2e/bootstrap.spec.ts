@@ -751,7 +751,7 @@ test("run deterministic intake and browse product surfaces on desktop and mobile
 
   await page.getByRole("button", { name: "健康" }).click();
   await expect(page.getByRole("heading", { name: "运行记录与 Guardian" })).toBeVisible();
-  await expect(page.getByText("process:true", { exact: true })).toBeVisible();
+  await expect(page.getByText("进程：就绪", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "总览" }).click();
   if (screenshotRoot) {
@@ -796,6 +796,7 @@ test("run deterministic intake and browse product surfaces on desktop and mobile
   }
   expect(scientificAfter.step7).not.toEqual(scientificBefore.step7);
   await page.getByRole("button", { name: "停止服务" }).click();
+  await page.getByRole("button", { name: "确认停止" }).click();
   await expect(page.getByRole("heading", { name: "服务已停止" })).toBeVisible();
 });
 

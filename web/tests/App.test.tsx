@@ -43,6 +43,7 @@ const api = vi.hoisted(() => ({
   getExchangeCapabilities: vi.fn(),
   listExchangeImports: vi.fn(),
   shutdown: vi.fn(),
+  resumeSession: vi.fn(),
 }));
 
 vi.mock("../src/api", () => ({
@@ -53,6 +54,9 @@ vi.mock("../src/api", () => ({
 describe("P2-D read-only product shell", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // No pre-existing browser session by default: the shell falls back to the
+    // lock screen exactly as it did before session resume existed.
+    api.resumeSession.mockRejectedValue(new Error("no session"));
     api.bootstrap.mockResolvedValue(undefined);
     api.getSetupStatus.mockResolvedValue({
       status: "success",
@@ -174,7 +178,7 @@ describe("P2-D read-only product shell", () => {
 
   it("clears the one-time token and exposes configured options after bootstrap", async () => {
     render(<App />);
-    const input = screen.getByLabelText("一次性 Token");
+    const input = await screen.findByLabelText("一次性 Token");
     fireEvent.change(input, { target: { value: "test-token-00000000000000000000000000" } });
     fireEvent.click(screen.getByRole("button", { name: "验证" }));
 
@@ -195,7 +199,7 @@ describe("P2-D read-only product shell", () => {
     });
     api.listWorkspaces.mockResolvedValueOnce([]);
     render(<App />);
-    fireEvent.change(screen.getByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
+    fireEvent.change(await screen.findByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
     fireEvent.click(screen.getByRole("button", { name: "验证" }));
 
     expect(await screen.findByRole("heading", { name: "工作区设置" })).toBeInTheDocument();
@@ -204,7 +208,7 @@ describe("P2-D read-only product shell", () => {
 
   it("opens a workspace, filters the Library, paginates, and inspects current detail", async () => {
     render(<App />);
-    fireEvent.change(screen.getByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
+    fireEvent.change(await screen.findByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
     fireEvent.click(screen.getByRole("button", { name: "验证" }));
     await screen.findByRole("button", { name: "打开" });
     fireEvent.click(screen.getByRole("button", { name: "打开" }));
@@ -227,7 +231,7 @@ describe("P2-D read-only product shell", () => {
   it("keeps an opened workspace usable when one summary panel fails", async () => {
     api.getCapabilities.mockRejectedValueOnce(new Error("capability unavailable"));
     render(<App />);
-    fireEvent.change(screen.getByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
+    fireEvent.change(await screen.findByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
     fireEvent.click(screen.getByRole("button", { name: "验证" }));
     await screen.findByRole("button", { name: "打开" });
     fireEvent.click(screen.getByRole("button", { name: "打开" }));
@@ -244,7 +248,7 @@ describe("P2-D read-only product shell", () => {
       operation: { category: null, state: "idle", job_id: null, diagnostic_code: null },
     });
     render(<App />);
-    fireEvent.change(screen.getByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
+    fireEvent.change(await screen.findByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
     fireEvent.click(screen.getByRole("button", { name: "验证" }));
     await screen.findByRole("button", { name: "打开" });
     fireEvent.click(screen.getByRole("button", { name: "打开" }));
@@ -263,7 +267,7 @@ describe("P2-D read-only product shell", () => {
       operation: { category: null, state: "idle", job_id: null, diagnostic_code: null },
     });
     render(<App />);
-    fireEvent.change(screen.getByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
+    fireEvent.change(await screen.findByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
     fireEvent.click(screen.getByRole("button", { name: "验证" }));
     await screen.findByRole("button", { name: "打开" });
     fireEvent.click(screen.getByRole("button", { name: "打开" }));
@@ -281,7 +285,7 @@ describe("P2-D read-only product shell", () => {
       operation: { category: null, state: "idle", job_id: null, diagnostic_code: null },
     });
     render(<App />);
-    fireEvent.change(screen.getByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
+    fireEvent.change(await screen.findByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
     fireEvent.click(screen.getByRole("button", { name: "验证" }));
     await screen.findByRole("button", { name: "打开" });
     fireEvent.click(screen.getByRole("button", { name: "打开" }));
@@ -295,7 +299,7 @@ describe("P2-D read-only product shell", () => {
 
   it("opens the deterministic Tags work surface without an Agent route", async () => {
     render(<App />);
-    fireEvent.change(screen.getByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
+    fireEvent.change(await screen.findByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
     fireEvent.click(screen.getByRole("button", { name: "验证" }));
     await screen.findByRole("button", { name: "打开" });
     fireEvent.click(screen.getByRole("button", { name: "打开" }));
@@ -311,7 +315,7 @@ describe("P2-D read-only product shell", () => {
 
   it("opens the Exchange work surface as an independent workspace operation", async () => {
     render(<App />);
-    fireEvent.change(screen.getByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
+    fireEvent.change(await screen.findByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
     fireEvent.click(screen.getByRole("button", { name: "验证" }));
     await screen.findByRole("button", { name: "打开" });
     fireEvent.click(screen.getByRole("button", { name: "打开" }));
@@ -323,5 +327,62 @@ describe("P2-D read-only product shell", () => {
     expect(await screen.findByRole("heading", { name: "知识库交换" })).toBeInTheDocument();
     expect(screen.getByText("research-kb-exchange-bundle@1.0")).toBeVisible();
     expect(screen.queryByText(/use as local fact/i)).not.toBeInTheDocument();
+  });
+
+  it("re-attaches to a live browser session after a reload instead of demanding the spent token", async () => {
+    // The startup token is single-use, so a reload previously stranded the user
+    // on a lock screen that could never be satisfied again.
+    api.resumeSession.mockResolvedValueOnce(undefined);
+    render(<App />);
+
+    expect(await screen.findByRole("button", { name: "打开" })).toBeInTheDocument();
+    expect(screen.queryByLabelText("一次性 Token")).not.toBeInTheDocument();
+    expect(api.bootstrap).not.toHaveBeenCalled();
+    expect(screen.getByRole("option", { name: "P2 Small Synthetic" })).toBeInTheDocument();
+  });
+
+  it("falls back to the lock screen when no browser session survives", async () => {
+    render(<App />);
+
+    expect(await screen.findByLabelText("一次性 Token")).toBeInTheDocument();
+    expect(api.resumeSession).toHaveBeenCalledOnce();
+    expect(screen.queryByRole("button", { name: "打开" })).not.toBeInTheDocument();
+  });
+
+  it("routes a resumed first-run session straight back into workspace setup", async () => {
+    api.resumeSession.mockResolvedValueOnce(undefined);
+    api.getSetupStatus.mockResolvedValueOnce({
+      status: "success",
+      interface_version: "research-kb-app-setup@1.0",
+      mode: "first_run",
+      profile_id: "default",
+      current_revision_id: null,
+      recovery_available: false,
+    });
+    api.listWorkspaces.mockResolvedValueOnce([]);
+    render(<App />);
+
+    expect(await screen.findByRole("heading", { name: "工作区设置" })).toBeInTheDocument();
+    expect(screen.queryByLabelText("一次性 Token")).not.toBeInTheDocument();
+  });
+
+  it("requires an explicit confirmation before stopping the backend process", async () => {
+    render(<App />);
+    fireEvent.change(await screen.findByLabelText("一次性 Token"), { target: { value: "test-token-00000000000000000000000000" } });
+    fireEvent.click(screen.getByRole("button", { name: "验证" }));
+    await screen.findByRole("button", { name: "打开" });
+
+    fireEvent.click(screen.getByRole("button", { name: "停止服务" }));
+    expect(api.shutdown).not.toHaveBeenCalled();
+
+    const consequence = await screen.findByText(/停止后需回到终端重新运行/);
+    expect(consequence).toBeVisible();
+
+    fireEvent.click(screen.getByRole("button", { name: "取消" }));
+    expect(api.shutdown).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "停止服务" }));
+    fireEvent.click(await screen.findByRole("button", { name: "确认停止" }));
+    await waitFor(() => expect(api.shutdown).toHaveBeenCalledOnce());
   });
 });
