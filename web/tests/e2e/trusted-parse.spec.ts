@@ -63,6 +63,7 @@ test("approve trusted Parse and resume an undecided route without parsing twice"
   await expect(page.locator("body")).not.toContainText("trusted_parse_");
 
   await page.getByRole("button", { name: "停止服务" }).click();
+  await page.getByRole("button", { name: "确认停止" }).click();
   await expect(page.getByRole("heading", { name: "服务已停止" })).toBeVisible();
 });
 

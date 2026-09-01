@@ -1452,27 +1452,86 @@ export class ApiError extends Error {
 
 let csrfToken: string | null = null;
 
-async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+/** Default ceiling for ordinary control-plane calls. */
+export const DEFAULT_TIMEOUT_MS = 30_000;
+/** Custody transfers move whole archives and must not inherit the short ceiling. */
+export const TRANSFER_TIMEOUT_MS = 30 * 60_000;
+
+async function request<T>(
+  path: string,
+  init: RequestInit = {},
+  timeoutMs: number = DEFAULT_TIMEOUT_MS,
+): Promise<T> {
   const headers = new Headers(init.headers);
   if (init.method === "POST") {
     if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json");
     if (csrfToken) headers.set("X-RKB-CSRF", csrfToken);
   }
-  const response = await fetch(path, {
-    ...init,
-    credentials: "same-origin",
-    headers,
-  });
-  const payload = (await response.json()) as Record<string, unknown>;
+
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  let response: Response;
+  try {
+    response = await fetch(path, {
+      ...init,
+      credentials: "same-origin",
+      headers,
+      signal: controller.signal,
+    });
+  } catch (caught) {
+    // fetch rejects on abort and on transport failure; neither produced an
+    // actionable message before, so both collapsed into a generic banner.
+    const aborted = caught instanceof Error && caught.name === "AbortError";
+    throw new ApiError(
+      aborted
+        ? `请求超时（${Math.round(timeoutMs / 1000)} 秒），任务可能仍在后台运行`
+        : "无法连接本地服务，请确认 App 进程仍在运行",
+      0,
+      aborted ? "RKBAPP-TIMEOUT" : "RKBAPP-OFFLINE",
+    );
+  } finally {
+    window.clearTimeout(timer);
+  }
+
+  let payload: Record<string, unknown> = {};
+  let parseFailed = false;
+  try {
+    payload = (await response.json()) as Record<string, unknown>;
+  } catch {
+    // A crashed worker, a proxy page or an empty body is not JSON. Parsing had
+    // to succeed before the status check, so those cases threw a SyntaxError
+    // that never reached the ApiError branch.
+    parseFailed = true;
+  }
+
   if (!response.ok) {
     const diagnostic = (payload.diagnostic ?? {}) as Record<string, unknown>;
     throw new ApiError(
-      typeof diagnostic.message === "string" ? diagnostic.message : "请求失败",
+      typeof diagnostic.message === "string"
+        ? diagnostic.message
+        : `服务返回 HTTP ${response.status}${parseFailed ? "（响应非 JSON）" : ""}`,
       response.status,
-      typeof diagnostic.code === "string" ? diagnostic.code : "RKBAPP-UNKNOWN",
+      typeof diagnostic.code === "string" ? diagnostic.code : `RKBAPP-HTTP-${response.status}`,
     );
   }
+  if (parseFailed) {
+    throw new ApiError("服务响应格式异常", response.status, "RKBAPP-BADJSON");
+  }
   return payload as T;
+}
+
+/**
+ * Re-attach to an existing browser session after a page reload.
+ *
+ * The startup token is single-use, so a reload used to strand the user on the
+ * lock screen with no way back in. The session cookie survives the reload and
+ * /api/session/csrf only requires that cookie, so the CSRF token can simply be
+ * re-fetched.
+ */
+export async function resumeSession(): Promise<void> {
+  const result = await request<{ csrf_token: string }>("/api/session/csrf");
+  csrfToken = result.csrf_token;
 }
 
 export async function bootstrap(startupToken: string): Promise<void> {
@@ -1645,11 +1704,15 @@ export function uploadExchangeImport(file: File): Promise<{
   archive_bytes: number;
   upload_ttl_seconds: number;
 }> {
-  return request("/api/exchange/import/upload", {
-    method: "POST",
-    headers: { "Content-Type": "application/vnd.research-kb.exchange+zip" },
-    body: file,
-  });
+  return request(
+    "/api/exchange/import/upload",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/vnd.research-kb.exchange+zip" },
+      body: file,
+    },
+    TRANSFER_TIMEOUT_MS,
+  );
 }
 
 export function previewExchangeImport(uploadToken: string): Promise<ExchangeImportPreview> {
@@ -1836,11 +1899,15 @@ export function startUploadIntake(file: File, payload: IntakeStartRequest): Prom
     ],
     { type: `multipart/form-data; boundary=${boundary}` },
   );
-  return request<IntakeAccepted>("/api/intake/upload", {
-    method: "POST",
-    headers: { "Content-Type": body.type },
-    body,
-  });
+  return request<IntakeAccepted>(
+    "/api/intake/upload",
+    {
+      method: "POST",
+      headers: { "Content-Type": body.type },
+      body,
+    },
+    TRANSFER_TIMEOUT_MS,
+  );
 }
 
 export function startInboxIntake(payload: InboxStartRequest): Promise<IntakeAccepted> {

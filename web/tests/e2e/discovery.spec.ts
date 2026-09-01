@@ -120,6 +120,7 @@ test("run explicit discovery and acquisition actions on desktop and mobile", asy
   }
 
   await page.getByRole("button", { name: "停止服务" }).click();
+  await page.getByRole("button", { name: "确认停止" }).click();
   await expect(page.getByRole("heading", { name: "服务已停止" })).toBeVisible();
 });
 

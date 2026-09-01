@@ -7,7 +7,6 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import {
-  ApiError,
   bootstrap,
   getCapabilities,
   getCatalogStatus,
@@ -16,6 +15,7 @@ import {
   listWorkspaces,
   openWorkspace,
   rebuildCatalog,
+  resumeSession,
   shutdown,
   type CapabilityResult,
   type CatalogStatus,
@@ -38,6 +38,9 @@ import { ResearchSynthesisView } from "./components/ResearchSynthesisView";
 import { ObsidianView } from "./components/ObsidianView";
 import { ExchangeView } from "./components/ExchangeView";
 import { SetupWorkspace } from "./components/SetupWorkspace";
+import { ConfirmButton } from "./components/ConfirmButton";
+import { errorMessage } from "./errors";
+import { booleanLabel, statusLabel } from "./statusLabels";
 
 type Phase = "locked" | "setup" | "ready" | "stopped";
 
@@ -55,8 +58,38 @@ function App() {
   const [readingPaperIds, setReadingPaperIds] = useState<string[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [restoring, setRestoring] = useState(true);
   const [error, setError] = useState("");
   const [panelError, setPanelError] = useState("");
+
+  async function enterSession() {
+    const [setup, options] = await Promise.all([getSetupStatus(), listWorkspaces()]);
+    setSetupStatus(setup);
+    setWorkspaces(options);
+    setSelected(options[0]?.option_id ?? "");
+    setPhase(setup.mode === "first_run" || setup.mode === "recovery" ? "setup" : "ready");
+  }
+
+  // A reload used to strand the user: the startup token is single-use, so the
+  // lock screen could never be satisfied again. The session cookie outlives the
+  // reload, so try to re-attach before falling back to the lock screen.
+  useEffect(() => {
+    let active = true;
+    resumeSession()
+      .then(() => {
+        if (active) return enterSession();
+        return undefined;
+      })
+      .catch(() => {
+        if (active) setPhase("locked");
+      })
+      .finally(() => {
+        if (active) setRestoring(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!status || status.operation?.state !== "building") return;
@@ -82,11 +115,7 @@ function App() {
     try {
       await bootstrap(token);
       setToken("");
-      const [setup, options] = await Promise.all([getSetupStatus(), listWorkspaces()]);
-      setSetupStatus(setup);
-      setWorkspaces(options);
-      setSelected(options[0]?.option_id ?? "");
-      setPhase(setup.mode === "first_run" || setup.mode === "recovery" ? "setup" : "ready");
+      await enterSession();
     } catch (caught) {
       setError(errorMessage(caught));
     } finally {
@@ -171,6 +200,28 @@ function App() {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (restoring) {
+    return (
+      <main className="bootstrap-shell">
+        <header className="bootstrap-brand">
+          <div className="brand-mark" aria-hidden="true"><Database size={21} /></div>
+          <div>
+            <h1>Research KB</h1>
+            <p>Local Workspace Manager</p>
+          </div>
+          <span className="phase-indicator">RESUMING</span>
+        </header>
+        <section className="bootstrap-panel" aria-live="polite">
+          <RefreshCw size={28} className="spin" aria-hidden="true" />
+          <div>
+            <p className="section-kicker">LOCAL SESSION</p>
+            <h2>正在恢复本地会话…</h2>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   if (phase === "locked") {
@@ -259,13 +310,25 @@ function App() {
           </button>
         </div>
         <div className="header-actions">
-          <span className={`header-status projection-${status?.projection_state ?? "missing"}`}>{status?.projection_state ?? "not selected"}</span>
+          <span
+            className={`header-status projection-${status?.projection_state ?? "missing"}`}
+            title={`Catalog projection: ${status?.projection_state ?? "not selected"}`}
+          >
+            {status ? statusLabel(status.projection_state) : "未选择工作区"}
+          </span>
           <button className="icon-button" type="button" onClick={handleRebuild} disabled={busy || !status || status.operation?.state === "building"} title="重建索引" aria-label="重建索引">
             <RefreshCw size={18} className={status?.operation?.state === "building" ? "spin" : ""} />
           </button>
-          <button className="icon-button danger-button" type="button" onClick={handleShutdown} disabled={busy} title="停止服务" aria-label="停止服务">
+          <ConfirmButton
+            className="icon-button danger-button"
+            title="停止服务"
+            description="停止后需回到终端重新运行 research-kb-app，并使用新的一次性 token。"
+            confirmLabel="确认停止"
+            disabled={busy}
+            onConfirm={handleShutdown}
+          >
             <Power size={18} />
-          </button>
+          </ConfirmButton>
         </div>
       </header>
 
@@ -334,9 +397,9 @@ function App() {
           <>
             {view === "health" && health && (
               <div className="health-band" aria-label="运行状态">
-                <span>process:{String(health.process_ready)}</span>
-                <span>core:{String(health.core_compatible)}</span>
-                <span>operation:{health.operation.state}</span>
+                <span>进程：{booleanLabel(health.process_ready, "就绪", "未就绪")}</span>
+                <span>Core 兼容：{booleanLabel(health.core_compatible, "是", "否")}</span>
+                <span>当前操作：{statusLabel(health.operation.state)}</span>
               </div>
             )}
             <CatalogBrowser
@@ -353,11 +416,6 @@ function App() {
       </main>
     </div>
   );
-}
-
-function errorMessage(caught: unknown): string {
-  if (caught instanceof ApiError) return `${caught.code}: ${caught.message}`;
-  return "请求未完成";
 }
 
 export default App;

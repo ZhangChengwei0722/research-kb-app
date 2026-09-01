@@ -112,9 +112,9 @@ describe("reading workspace", () => {
     vi.mocked(api.getReadingPaper).mockResolvedValueOnce(stale);
     const { rerender } = render(<ReadingWorkspace paperIds={["paper_primary"]} onRemovePaper={() => undefined} />);
 
-    expect(await screen.findByText("source:missing")).toBeVisible();
-    expect(screen.getByText("trace:stale_source")).toBeVisible();
-    expect(screen.getByText("parse:historical_not_materialized")).toBeVisible();
+    expect(await screen.findByText("来源：缺失")).toBeVisible();
+    expect(screen.getByText("回源：来源已变更")).toBeVisible();
+    expect(screen.getByText("解析：历史版本未落地")).toBeVisible();
 
     vi.mocked(api.getReadingPaper).mockRejectedValueOnce(new api.ApiError("Reading unavailable", 409, "RKBAPP-READ"));
     rerender(<ReadingWorkspace paperIds={["paper_missing"]} onRemovePaper={() => undefined} />);
