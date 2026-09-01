@@ -24,7 +24,7 @@ dependencies = [
   "attrs==26.1.0",
   "cffi==2.1.1",
   "charset-normalizer==3.5.0",
-  "cryptography==50.0.0",
+  "cryptography==50.0.1",
   "fastapi==0.141.1",
   "filelock==3.32.3",
   "jsonschema==4.26.0",
